@@ -23,7 +23,8 @@ app.installTranslator(translator)
 
 
 def main():
-    if cfg.auto_login.value:
+    #if cfg.auto_login.value:
+    if True:
         logger.debug('判断是否登录')
         if True:
             logger.debug('已登录')

@@ -15,7 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QSizePolicy, QTextEdit, QWidget)
 
 from qfluentwidgets import PushButton
 
@@ -30,6 +30,9 @@ class Ui_page_one(object):
         self.pushButton_2 = PushButton(page_one)
         self.pushButton_2.setObjectName(u"pushButton_2")
         self.pushButton_2.setGeometry(QRect(280, 190, 111, 31))
+        self.textEdit_codes = QTextEdit(page_one)
+        self.textEdit_codes.setObjectName(u"textEdit_codes")
+        self.textEdit_codes.setGeometry(QRect(180, 230, 351, 181))
 
         self.retranslateUi(page_one)
 

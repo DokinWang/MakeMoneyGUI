@@ -39,6 +39,16 @@
     <string>耗时操作演示</string>
    </property>
   </widget>
+  <widget class="QTextEdit" name="textEdit_codes">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>230</y>
+     <width>351</width>
+     <height>181</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

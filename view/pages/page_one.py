@@ -5,7 +5,6 @@ from components.bar import ProgressInfoBar
 from ui_page.ui_page_one import Ui_page_one
 from view.pages.page_one_handler import PageOneHandler
 
-
 class PageOne(QWidget, Ui_page_one):
     def __init__(self, parent=None):
         super().__init__(parent)
