@@ -1,0 +1,15 @@
+[project]
+name = "makemoneygui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pyside6",
+    "loguru",
+    "PySide6-Fluent-Widgets",
+    "pycryptodome",
+    "nuitka==2.7.12",
+    "imageio",
+    "pyside6==6.7.0",
+]
