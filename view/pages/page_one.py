@@ -12,6 +12,13 @@ class PageOne(QWidget, Ui_page_one):
         self.setupUi(self)
         self.handler = PageOneHandler(self)
         self.bind_event()
+        self.stockUpdataTable.setColumnCount(4)
+        self.stockUpdataTable.setHorizontalHeaderLabels(['股票代码', '股票名称', '最新价', '涨跌幅'])
+        self.stockUpdataTable.setColumnWidth(0, 100)
+        self.stockUpdataTable.setColumnWidth(1, 200)
+        self.stockUpdataTable.setColumnWidth(2, 100)
+        self.stockUpdataTable.setColumnWidth(3, 100)    
+        self.stockUpdataTable.setAlternatingRowColors(True)
 
     def bind_event(self):
         self.pushButton.clicked.connect(self.handler.do_something) # 绑定事件

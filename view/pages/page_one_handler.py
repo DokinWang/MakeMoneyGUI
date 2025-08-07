@@ -3,7 +3,7 @@ from PySide6.QtCore import QObject
 from api.api import demo_api
 from common.utils import show_dialog
 from workers.TaskManager import task_manager
-from view.policy.boll_break import *
+from view.policy.stock import *
 
 class PageOneHandler(QObject):
     def __init__(self, parent: 'PageOne'):
@@ -11,8 +11,9 @@ class PageOneHandler(QObject):
         self._parent = parent
 
     def do_something(self):
-        codes = get_all_a_codes_from_cache()
-        print(codes)
+        #codes,names = get_all_stock()
+        codes = get_all_stock_from_cache()
+        #print(codes)
         #show_dialog (self._parent, 'do something')
         #self._parent.textEdit_codes.setText(codes)
 
