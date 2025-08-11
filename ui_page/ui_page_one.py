@@ -15,8 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHeaderView, QSizePolicy, QTableWidget,
-    QTableWidgetItem, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QProgressBar,
+    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 from qfluentwidgets import PushButton
 
@@ -24,16 +25,65 @@ class Ui_page_one(object):
     def setupUi(self, page_one):
         if not page_one.objectName():
             page_one.setObjectName(u"page_one")
-        page_one.resize(723, 456)
-        self.pushButton = PushButton(page_one)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(10, 10, 111, 31))
-        self.pushButton_2 = PushButton(page_one)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(10, 50, 111, 31))
-        self.stockUpdataTable = QTableWidget(page_one)
+        page_one.resize(861, 622)
+        self.horizontalLayout = QHBoxLayout(page_one)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.widget_2 = QWidget(page_one)
+        self.widget_2.setObjectName(u"widget_2")
+        self.verticalLayout_2 = QVBoxLayout(self.widget_2)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.stockUpdataTable = QTableWidget(self.widget_2)
         self.stockUpdataTable.setObjectName(u"stockUpdataTable")
-        self.stockUpdataTable.setGeometry(QRect(140, 10, 511, 431))
+
+        self.verticalLayout_2.addWidget(self.stockUpdataTable)
+
+        self.updateProgress = QProgressBar(self.widget_2)
+        self.updateProgress.setObjectName(u"updateProgress")
+        self.updateProgress.setValue(0)
+        self.updateProgress.setAlignment(Qt.AlignCenter)
+        self.updateProgress.setTextVisible(True)
+        self.updateProgress.setOrientation(Qt.Horizontal)
+        self.updateProgress.setTextDirection(QProgressBar.TopToBottom)
+
+        self.verticalLayout_2.addWidget(self.updateProgress)
+
+
+        self.horizontalLayout.addWidget(self.widget_2)
+
+        self.widget = QWidget(page_one)
+        self.widget.setObjectName(u"widget")
+        self.verticalLayout = QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+        self.loadLocalBtn = PushButton(self.widget)
+        self.loadLocalBtn.setObjectName(u"loadLocalBtn")
+
+        self.verticalLayout.addWidget(self.loadLocalBtn)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout.addItem(self.verticalSpacer_4)
+
+        self.updateLocalBtn = PushButton(self.widget)
+        self.updateLocalBtn.setObjectName(u"updateLocalBtn")
+
+        self.verticalLayout.addWidget(self.updateLocalBtn)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout.addItem(self.verticalSpacer_3)
+
+        self.updateClearBtn = PushButton(self.widget)
+        self.updateClearBtn.setObjectName(u"updateClearBtn")
+
+        self.verticalLayout.addWidget(self.updateClearBtn)
+
+
+        self.horizontalLayout.addWidget(self.widget)
+
 
         self.retranslateUi(page_one)
 
@@ -42,7 +92,8 @@ class Ui_page_one(object):
 
     def retranslateUi(self, page_one):
         page_one.setWindowTitle(QCoreApplication.translate("page_one", u"Form", None))
-        self.pushButton.setText(QCoreApplication.translate("page_one", u"\u66f4\u65b0\u6240\u6709\u80a1\u7968\u6570\u636e", None))
-        self.pushButton_2.setText(QCoreApplication.translate("page_one", u"\u66f4\u65b0\u672c\u5730\u80a1\u7968\u6570\u636e", None))
+        self.loadLocalBtn.setText(QCoreApplication.translate("page_one", u"\u52a0\u8f7d\u672c\u5730\u6570\u636e", None))
+        self.updateLocalBtn.setText(QCoreApplication.translate("page_one", u"\u66f4\u65b0\u672c\u5730\u6570\u636e", None))
+        self.updateClearBtn.setText(QCoreApplication.translate("page_one", u"\u6e05\u7a7a", None))
     # retranslateUi
 

@@ -2,6 +2,7 @@ import sys
 
 from PySide6.QtCore import QRect
 from PySide6.QtGui import QIcon
+
 from qfluentwidgets import FluentWindow, NavigationItemPosition
 
 from components.icon import MyIcon
@@ -23,6 +24,7 @@ class MainWindow(FluentWindow):
             self.navigationInterface.setExpandWidth(150)
         # 创建子界面，实际使用时将 Widget 换成自己的子界面
         self.settingInterface = SettingInterface(self)
+
         self.pageOne = PageOne(self)
         self.pageTwo = PageTwo(self)
         self.init_navigation()

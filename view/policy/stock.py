@@ -35,6 +35,16 @@ def _local_path(code: str) -> str:
     return os.path.join(CACHE_DIR, f"{code}.pkl")
 
 def last_trading_day() -> str:
+    """获取上一个交易日的日期"""
+    today = pd.Timestamp.today()
+    # 如果当前时间是下午3点之前，回退到上一个交易日
+    if today.hour < 15:
+        today -= pd.Timedelta(days=1)
+    # 如果今天是周末，回退到上一个周五
+    while today.weekday() >= 5:  # 周六或周日
+        today -= pd.Timedelta(days=1)
+    return today.strftime("%Y%m%d")
+    '''
     """返回最近一个交易日（YYYYMMDD），周末/节假日自动跳过"""
     today = datetime.date.today()
     # 向前多找 10 天，确保至少有一条交易日
@@ -59,6 +69,7 @@ def last_trading_day() -> str:
             if candidate.weekday() < 5:           # 周一到周五
                 return candidate.strftime("%Y%m%d")
             offset += 1
+    '''
 
 #更新个股信息,update为True才更新
 def load_or_update(code: str, update: bool) -> pd.DataFrame:
@@ -91,11 +102,10 @@ def load_or_update(code: str, update: bool) -> pd.DataFrame:
         df_old = pd.DataFrame()
         last_date = pd.to_datetime(START_DATE) - pd.Timedelta(days=1)
 
-    # 距离上次更新 ≥ 5 天（含）才更新
-    if update and (pd.to_datetime(today_str).date() - last_date.date()).days >= 5:
+    if update and (pd.to_datetime(today_str).date() - last_date.date()).days >= 1:
         start_str = (last_date + pd.Timedelta(days=1)).strftime("%Y%m%d")
         print('{} need update, last:{}, start:{}, end{}'.format(code, last_date.date(), start_str, today_str))
-        time.sleep(random.uniform(0.5, 1.5))
+        time.sleep(random.uniform(0.8, 1.6))
         df_new = ak.stock_zh_a_hist(symbol=code,
                                     period="daily",
                                     start_date=start_str,
