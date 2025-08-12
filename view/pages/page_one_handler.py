@@ -79,6 +79,7 @@ class PageOneHandler(QObject):
             self._parent.on_common_error(str(e))
 
     def clear_stock(self):
+        self._parent.close_state_tooltip()
         self._parent.clear_stock_table()
         self._parent.updateProgress.setValue(0)
 
