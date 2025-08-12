@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import Qt , QObject, Signal
 from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 
 from api.api import demo_api
@@ -8,7 +8,7 @@ from view.policy.stock import *
 
 class PageOneHandler(QObject):
     progress_signal = Signal(int)
-    row_ready = Signal(str, str, pd.Series)
+    row_ready = Signal(str, str, str, pd.Series)
 
     def __init__(self, parent: 'PageOne'):
         super().__init__(parent)
@@ -16,7 +16,7 @@ class PageOneHandler(QObject):
         self.progress_signal.connect(self.set_progress)
         self.row_ready.connect(self.add_row_to_table)
 
-    def load_show_stock_task(self, codes, update=False):
+    def load_show_stock_task(self, codes, names, update=False):
         total = len(codes)
         cnt = 0
         try:
@@ -39,7 +39,7 @@ class PageOneHandler(QObject):
                     latest_data_row = latest_data.iloc[0]
                     # 将日期转换为字符串格式
                     latest_date_str = latest_data_row['日期'].strftime("%Y-%m-%d")
-                    self.row_ready.emit(code, latest_date_str, latest_data_row)
+                    self.row_ready.emit(code, names[code], latest_date_str, latest_data_row)
                     cnt = cnt + 1
                     progress = cnt * 100 / total
                     self.progress_signal.emit(progress)
@@ -48,12 +48,12 @@ class PageOneHandler(QObject):
 
     def load_local_stock(self):
         try:
-            codes = get_all_stock_from_cache()
+            codes, names = get_all_stock_from_cache()
             self._parent.show_state_tooltip('正在加载', '请稍后...')
             self._parent.clear_stock_table()
             self._parent.updateProgress.setValue(0)
             task_manager.submit_task(
-                self.load_show_stock_task,args=(codes,),
+                self.load_show_stock_task, args=(codes, names, ),
                 kwargs={'update': False},
                 on_success=self.load_stock_success,
                 on_error=lambda msg: self._parent.on_common_error(msg)
@@ -64,12 +64,12 @@ class PageOneHandler(QObject):
 
     def update_stock(self):
         try:
-            codes,names = get_all_stock()
+            codes, names = get_all_stock()
             self._parent.show_state_tooltip('正在更新', '请稍后...')
             self._parent.clear_stock_table()
             self._parent.updateProgress.setValue(0)
             task_manager.submit_task(
-                self.load_show_stock_task,args=(codes,),
+                self.load_show_stock_task, args=(codes, names, ),
                 kwargs={'update': True},
                 on_success=self.update_stock_success,
                 on_error=lambda msg: self._parent.on_common_error(msg)
@@ -80,6 +80,7 @@ class PageOneHandler(QObject):
 
     def clear_stock(self):
         self._parent.clear_stock_table()
+        self._parent.updateProgress.setValue(0)
 
     def load_stock_success(self):
         self._parent.close_state_tooltip()
@@ -92,14 +93,31 @@ class PageOneHandler(QObject):
     def set_progress(self, progress):
         self._parent.updateProgress.setValue(progress)
 
-    def add_row_to_table(self, code: str, date_str: str, row: pd.Series):
+    def add_row_to_table(self, code: str, name: str, date_str: str, row: pd.Series):
         table = self._parent.stockUpdataTable
         pos = table.rowCount()
         table.insertRow(pos)
+
+        # 创建并设置每个单元格的内容和居中对齐
         table.setItem(pos, 0, QTableWidgetItem(code))
-        table.setItem(pos, 1, QTableWidgetItem(date_str))
-        table.setItem(pos, 2, QTableWidgetItem(str(row['开盘'])))
-        table.setItem(pos, 3, QTableWidgetItem(str(row['最高'])))
-        table.setItem(pos, 4, QTableWidgetItem(str(row['最低'])))
-        table.setItem(pos, 5, QTableWidgetItem(str(row['收盘'])))
+        table.item(pos, 0).setTextAlignment(Qt.AlignCenter)  # 股票代码居中
+
+        table.setItem(pos, 1, QTableWidgetItem(name))
+        table.item(pos, 1).setTextAlignment(Qt.AlignCenter)  # 股票名称居中
+
+        table.setItem(pos, 2, QTableWidgetItem(date_str))
+        table.item(pos, 2).setTextAlignment(Qt.AlignCenter)  # 日期居中
+
+        table.setItem(pos, 3, QTableWidgetItem(str(row['开盘'])))
+        table.item(pos, 3).setTextAlignment(Qt.AlignCenter)  # 开盘价居中
+
+        table.setItem(pos, 4, QTableWidgetItem(str(row['最高'])))
+        table.item(pos, 4).setTextAlignment(Qt.AlignCenter)  # 最高价居中
+
+        table.setItem(pos, 5, QTableWidgetItem(str(row['最低'])))
+        table.item(pos, 5).setTextAlignment(Qt.AlignCenter)  # 最低价居中
+
+        table.setItem(pos, 6, QTableWidgetItem(str(row['收盘'])))
+        table.item(pos, 6).setTextAlignment(Qt.AlignCenter)  # 收盘价居中
+
         table.scrollToBottom()

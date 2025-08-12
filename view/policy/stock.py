@@ -18,6 +18,8 @@ ADJUST = "qfq"                   # 前复权
 PE_LOW, PE_HIGH = 20, 45         # PE 过滤
 BOLL_WINDOW = 20                 # 布林周期（基于 3 日线）
 _sh_cache = None  # 保存已加载的 Series
+_stock_code_name_dict = None    # 全局变量，存储股票代码与名称的字典
+STOCK_CODE_NAME_DICT_FILE = os.path.join(CACHE_DIR, "stock_code_name_dict.pkl")
 
 def get_cache_dir() -> str:
     return CACHE_DIR
@@ -71,10 +73,38 @@ def last_trading_day() -> str:
             offset += 1
     '''
 
+def load_or_update_stock_code_name_dict(update: bool = False, ak_spot = None):
+    global _stock_code_name_dict
+    if update is False and os.path.exists(STOCK_CODE_NAME_DICT_FILE):
+        # 如果文件存在，直接加载
+        print("加载本地股票代码与名称字典库文件...")
+        _stock_code_name_dict = pd.read_pickle(STOCK_CODE_NAME_DICT_FILE)
+    else:
+        # 如果文件不存在，通过 ak.stock_zh_a_spot_em() 获取数据并保存
+        print("本地股票代码与名称字典库文件不存在，正在获取最新数据...")
+        if ak_spot is None:
+            spot = ak.stock_zh_a_spot_em()
+        else:
+            spot = ak_spot
+        spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]  # 确保代码是6位数字
+
+        # 提取股票代码和名称
+        codes = spot['代码'].str.zfill(6).tolist()
+        names = spot.set_index('代码')['名称'].to_dict()
+
+        # 保存到全局变量和文件
+        _stock_code_name_dict = pd.Series(names, name="股票名称")
+        _stock_code_name_dict.to_pickle(STOCK_CODE_NAME_DICT_FILE)
+        print("股票代码与名称字典库文件已保存到本地。")
+
 #更新个股信息,update为True才更新
 def load_or_update(code: str, update: bool) -> pd.DataFrame:
     today_str = last_trading_day()
     pkl_path = _local_path(code)
+
+    # 加载或更新股票代码与名称字典库文件
+    if _stock_code_name_dict is None:
+        load_or_update_stock_code_name_dict()
 
     # 新增：上证指数 000001 的缓存
     if code == "000001":
@@ -117,13 +147,23 @@ def load_or_update(code: str, update: bool) -> pd.DataFrame:
             df_old.to_pickle(pkl_path)
     return df_old
 
-def get_all_stock_from_cache() -> List[str]:
+def stock_name(code: str) -> str:
+    if _stock_code_name_dict is None:
+        load_or_update_stock_code_name_dict()
+    if _stock_code_name_dict is None:
+        return None
+    return _stock_code_name_dict[code]
+
+def get_all_stock_from_cache() -> Tuple[List[str], Dict[str, str]]:
     import warnings
     warnings.filterwarnings("ignore", category=FutureWarning)
 
     codes, names = [], {}
     pe_pattern = re.compile(r"\d{6}")
     dir = get_cache_dir()
+
+    if _stock_code_name_dict is None:
+        load_or_update_stock_code_name_dict()
 
     for file in os.listdir(dir):
         # 只处理 6 位数字 .pkl 文件
@@ -132,11 +172,15 @@ def get_all_stock_from_cache() -> List[str]:
             continue
         code = m.group(0)
         codes.append(code)
+        if code in _stock_code_name_dict.index:
+            names[code] = _stock_code_name_dict[code]
+    return codes, names
 
-    return codes
-
-def get_all_stock(pe_low: float = 20, pe_high: float = 45) -> Tuple[List[str], Dict[str, str]]:
+def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     spot = ak.stock_zh_a_spot_em()
+
+    load_or_update_stock_code_name_dict(update=True, ak_spot=spot)
+
     spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]
     spot = spot[~spot['名称'].str.contains('ST', na=False)]
     spot = spot[~spot['代码'].str.startswith(('30', '83', '87', '43', '688', '689', '9'))]
@@ -149,6 +193,7 @@ def get_all_stock(pe_low: float = 20, pe_high: float = 45) -> Tuple[List[str], D
         '399300', '399905'
     }
     spot = spot[~spot['代码'].isin(index_codes)]
+
     '''
     pe_col = next((c for c in spot.columns
                    if '市盈率' in str(c) or str(c).upper() == 'PE'), None)
