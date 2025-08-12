@@ -36,8 +36,8 @@ class MainWindow(FluentWindow):
     def init_navigation(self):
         # 新增页面需要再此处添加
         sub_interface_list = [
-            {'widget': self.pageOne, 'icon': MyIcon.CLICK, 'text': '页面一'},
-            {'widget': self.pageTwo, 'icon': MyIcon.EXCEL, 'text': '页面二'}
+            {'widget': self.pageOne, 'icon': MyIcon.EXCEL, 'text': '数据管理'},
+            {'widget': self.pageTwo, 'icon': MyIcon.CLICK, 'text': 'boll下轨'}
         ]
         for item in sub_interface_list:
             self.addSubInterface(item['widget'], item['icon'], item['text'])
@@ -47,8 +47,8 @@ class MainWindow(FluentWindow):
     def init_window(self):
         if sys.platform != "darwin":
             self.setWindowIcon(QIcon(':/resource/images/logo.png'))
-            self.setWindowTitle('MyApp')
-        self.resize(900, 700)
+            self.setWindowTitle('屎里淘金V2.0')
+        self.resize(1200, 800)
         # 把窗口放在屏幕中间
         self.move((self.screen().size().width() - self.width()) / 2,
                   (self.screen().size().height() - self.height()) / 2)

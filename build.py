@@ -2,7 +2,7 @@ import os
 
 from common.config import VERSION, AUTHOR
 
-app_name = 'MyApp'
+app_name = '屎里淘金V2.0'
 build_command = "nuitka --standalone --mingw64 --enable-plugin=pyside6 "
 build_command += "--windows-disable-console "
 build_command += "--windows-icon-from-ico=resource/images/logo.png --output-dir=out "
