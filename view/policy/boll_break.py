@@ -3,28 +3,29 @@ import pandas as pd
 import datetime
 
 from typing import List, Dict, Tuple
-from stock import get_cache_dir, get_sh_series, load_or_update
+from view.policy.stock import get_cache_dir, get_sh_series, load_or_update, stock_name
 
-def _sh_ok(dt, min_val=3180, max_val=3600) -> bool:
+def _sh_ok(dt, sh_min=3180, sh_max=3600) -> bool:
     val = get_sh_series().get(dt)
-    return val is not None and min_val <= val <= max_val
+    return val is not None and sh_min <= val <= sh_max
 
 def boll_reverse_backtest(code: str,
+                          df: pd.DataFrame,
                           period_s: str = "2023-01-16",
                           period_e: str = None,
-                          window: int = 20) -> Tuple[pd.DataFrame, float]:
+                          sh_min: int = 3100,
+                          sh_max: int = 3600,
+                          window: int = 20) -> pd.DataFrame:
     if period_e is None:
         period_e = datetime.date.today().strftime("%Y-%m-%d")
 
-    # 1) 取个股日 K（本地缓存）
-    df = load_or_update(code, False)
     if df.empty:
         return pd.DataFrame(), None
     df = df.sort_values('日期').reset_index(drop=True)
 
     # 2) 合成 3 日线
-    #df['trade_no'] = df.index // 3
-    df['trade_no'] = pd.to_datetime(df['日期']).dt.to_period('W').dt.start_time  # 周一
+    df['trade_no'] = df.index // 3
+    #df['trade_no'] = pd.to_datetime(df['日期']).dt.to_period('W').dt.start_time  # 周一
 
     three_day_df = (
         df.groupby(df['trade_no'])
@@ -71,7 +72,7 @@ def boll_reverse_backtest(code: str,
 
         # 买入日
         buy_bar = sub[sub['日期'] == low_date].iloc[0]
-        if not _sh_ok(buy_bar['日期']):
+        if not _sh_ok(buy_bar['日期'], sh_min, sh_max):
             continue  # 上证不在区间，跳过
 
         # 卖出日
@@ -80,20 +81,24 @@ def boll_reverse_backtest(code: str,
         if not cond.any():
             continue
         sell_bar = sell_candidates[cond].iloc[0]
-        if not _sh_ok(sell_bar['日期']):
-            continue  # 上证不在区间，跳过
+        #if not _sh_ok(sell_bar['日期']):
+        #    continue  # 上证不在区间，跳过
 
-        buy_price = buy_bar['Lower']
-        sell_price = sell_bar['MA20']
+        # 保留两位小数
+        buy_price = round(buy_bar['Lower'], 2)
+        sell_price = round(sell_bar['MA20'], 2)
+
+        name = stock_name(code)
         trades.append({
-            '股票代码': code,
-            '买入日期': buy_bar['日期'].date(),
+            '代码': code,
+            '名称': name,
             '买入价': buy_price,
-            '卖出日期': sell_bar['日期'].date(),
             '卖出价': sell_price,
+            '买入日期': buy_bar['日期'].strftime("%Y-%m-%d"),
+            '卖出日期': sell_bar['日期'].strftime("%Y-%m-%d"),
             '收益率': (sell_price - buy_price) / buy_price,
             '持有天数': (sell_bar['日期'] - buy_bar['日期']).days
         })
 
     df_trades = pd.DataFrame(trades)
-    return df_trades, df_trades['收益率'].mean() if not df_trades.empty else None
+    return df_trades

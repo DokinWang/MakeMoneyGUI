@@ -21,6 +21,9 @@ _sh_cache = None  # 保存已加载的 Series
 _stock_code_name_dict = None    # 全局变量，存储股票代码与名称的字典
 STOCK_CODE_NAME_DICT_FILE = os.path.join(CACHE_DIR, "stock_code_name_dict.pkl")
 
+# 全局变量，存储股票代码到 DataFrame 的映射
+_global_stock_data_dict: Dict[str, pd.DataFrame] = None
+
 def get_cache_dir() -> str:
     return CACHE_DIR
 
@@ -206,3 +209,12 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     codes = spot['代码'].str.zfill(6).tolist()
     names = spot.set_index('代码')['名称'].to_dict()
     return codes, names
+
+def get_stock_data(update: bool = False) -> Dict[str, pd.DataFrame]:
+    global _global_stock_data_dict
+    if _global_stock_data_dict is None:
+        _global_stock_data_dict = {}
+        codes, _ = get_all_stock_from_cache()
+        for code in codes:
+            _global_stock_data_dict[code] = load_or_update(code, update)
+    return _global_stock_data_dict

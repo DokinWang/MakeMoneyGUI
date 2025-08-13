@@ -1,10 +1,11 @@
 from PySide6.QtCore import Qt , QObject, Signal
 from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
-
+import pandas as pd
 from api.api import demo_api
 from common.utils import show_dialog
 from workers.TaskManager import task_manager
-from view.policy.stock import *
+from view.policy.stock import load_or_update, get_all_stock_from_cache, get_all_stock
+#from common.my_logger import my_logger as logger
 
 class PageOneHandler(QObject):
     progress_signal = Signal(int)

@@ -3,15 +3,18 @@ from PySide6.QtWidgets import QWidget
 from common.utils import show_dialog
 from components.bar import ProgressInfoBar
 from ui_page.ui_page_one import Ui_page_one
-from view.pages.page_one_handler import PageOneHandler
+from view.pages.page_stock_update_handler import PageOneHandler
 
-class PageOne(QWidget, Ui_page_one):
+class PageStockUpdate(QWidget, Ui_page_one):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.loading_bar = None
         self.setupUi(self)
         self.handler = PageOneHandler(self)
+        self.form_init()
         self.bind_event()
+
+    def form_init(self):
         self.stockUpdataTable.setColumnCount(7)
         self.stockUpdataTable.setHorizontalHeaderLabels(['股票代码', '名称', '最新日期', '开盘', '最高', '最低', '收盘'])
         self.stockUpdataTable.setColumnWidth(0, 100)
@@ -33,9 +36,12 @@ class PageOne(QWidget, Ui_page_one):
         self.loading_bar.show()
 
     def close_state_tooltip(self):
-        if self.loading_bar:
-            self.loading_bar.hide()
-            self.loading_bar = None
+        try:
+            if self.loading_bar:
+                self.loading_bar.hide()
+                self.loading_bar = None
+        except RuntimeError as e:
+            pass
 
     def clear_stock_table(self):
         self.stockUpdataTable.setRowCount(0)

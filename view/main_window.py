@@ -7,8 +7,8 @@ from qfluentwidgets import FluentWindow, NavigationItemPosition
 
 from components.icon import MyIcon
 from qfluentwidgets import FluentIcon as FIF
-from view.pages.page_one import PageOne
-from view.pages.page_two import PageTwo
+from view.pages.page_stock_update import PageStockUpdate
+from view.pages.page_back_test import PageBackTest
 from view.pages.setting_page import SettingInterface
 
 
@@ -25,8 +25,8 @@ class MainWindow(FluentWindow):
         # 创建子界面，实际使用时将 Widget 换成自己的子界面
         self.settingInterface = SettingInterface(self)
 
-        self.pageOne = PageOne(self)
-        self.pageTwo = PageTwo(self)
+        self.pageStockUpdate = PageStockUpdate(self)
+        self.pageBackTest = PageBackTest(self)
         self.init_navigation()
         self.init_window()
 
@@ -36,8 +36,8 @@ class MainWindow(FluentWindow):
     def init_navigation(self):
         # 新增页面需要再此处添加
         sub_interface_list = [
-            {'widget': self.pageOne, 'icon': MyIcon.EXCEL, 'text': '数据管理'},
-            {'widget': self.pageTwo, 'icon': MyIcon.CLICK, 'text': 'boll下轨'}
+            {'widget': self.pageStockUpdate, 'icon': MyIcon.EXCEL, 'text': '数据管理'},
+            {'widget': self.pageBackTest, 'icon': MyIcon.CLICK, 'text': '数据回测'}
         ]
         for item in sub_interface_list:
             self.addSubInterface(item['widget'], item['icon'], item['text'])
