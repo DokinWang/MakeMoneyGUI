@@ -28,10 +28,9 @@ def get_sh_series() -> pd.Series:
     """延迟加载上证指数日线"""
     global _sh_cache
     if _sh_cache is None:
-        df = load_or_update("000001", True)
+        df = load_or_update("000001", False)
         _sh_cache = df.set_index('日期')['收盘']
     return _sh_cache
-
 
 def _local_path(code: str) -> str:
     return os.path.join(CACHE_DIR, f"{code}.pkl")
@@ -184,13 +183,15 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]
     spot = spot[~spot['名称'].str.contains('ST', na=False)]
     spot = spot[~spot['代码'].str.startswith(('30', '83', '87', '43', '688', '689', '9'))]
-    spot = spot[~spot['名称'].str.contains('指数', na=False)]
+    #spot = spot[~spot['名称'].str.contains('指数', na=False)]
+    # 只排除名称含“指数”且代码不是 000001 的行
+    spot = spot[~(spot['名称'].str.contains('指数', na=False) & (spot['代码'] != '000001'))]
 
     # 剔除常见指数代码
     index_codes = {
-        '000001', '000300', '000905', '399001',
-        '399006', '399101', '399102', '399106',
-        '399300', '399905'
+        '000300', '000905', '399001',
+        '399006', '399101', '399102',
+        '399106', '399300', '399905'
     }
     spot = spot[~spot['代码'].isin(index_codes)]
 
