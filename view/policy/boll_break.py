@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 
 from typing import List, Dict, Tuple
-from view.policy.stock import get_cache_dir, get_sh_series, load_or_update, stock_name
+from view.policy.stock import get_cache_dir, get_sh_series, stock_name
 
 def _sh_ok(dt, sh_min=3180, sh_max=3600) -> bool:
     val = get_sh_series().get(dt)

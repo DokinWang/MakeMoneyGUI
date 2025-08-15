@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt , QObject, Signal
+from PySide6.QtCore import Qt , QObject, Signal, QDate
 from PySide6.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 import pandas as pd
 from api.api import demo_api
@@ -17,13 +17,13 @@ class PageOneHandler(QObject):
         self.progress_signal.connect(self.set_progress)
         self.row_ready.connect(self.add_row_to_table)
 
-    def load_show_stock_task(self, codes, names, update=False):
+    def load_show_stock_task(self, codes, names, update=False, update_day = ''):
         total = len(codes)
         cnt = 0
         try:
             self.progress_signal.emit(0)
             for code in codes:
-                df = load_or_update(code, update)
+                df = load_or_update(code, update, update_day)
 
                 # 确保日期列是 datetime 类型（虽然代码中已经转换过了，但这里再确认一下）
                 df['日期'] = pd.to_datetime(df['日期'])
@@ -55,7 +55,7 @@ class PageOneHandler(QObject):
             self._parent.updateProgress.setValue(0)
             task_manager.submit_task(
                 self.load_show_stock_task, args=(codes, names, ),
-                kwargs={'update': False},
+                kwargs={'update': False, 'update_day': ''},
                 on_success=self.load_stock_success,
                 on_error=lambda msg: self._parent.on_common_error(msg)
             )
@@ -65,13 +65,15 @@ class PageOneHandler(QObject):
 
     def update_stock(self):
         try:
+            # = pd.Timestamp(self._parent.update_day.date().toPyDate()).strftime("%Y%m%d")
+            update_day = self._parent.update_day.date().toString("yyyyMMdd")
             codes, names = get_all_stock()
             self._parent.show_state_tooltip('正在更新', '请稍后...')
             self._parent.clear_stock_table()
             self._parent.updateProgress.setValue(0)
             task_manager.submit_task(
                 self.load_show_stock_task, args=(codes, names, ),
-                kwargs={'update': True},
+                kwargs={'update': True, 'update_day': update_day},
                 on_success=self.update_stock_success,
                 on_error=lambda msg: self._parent.on_common_error(msg)
             )

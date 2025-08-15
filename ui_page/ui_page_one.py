@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QProgressBar,
-    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QDateEdit, QGroupBox, QHBoxLayout,
+    QHeaderView, QProgressBar, QSizePolicy, QSpacerItem,
+    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
 from qfluentwidgets import PushButton
 
@@ -58,19 +58,37 @@ class Ui_page_one(object):
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
-        self.loadLocalBtn = PushButton(self.widget)
-        self.loadLocalBtn.setObjectName(u"loadLocalBtn")
+        self.groupBox = QGroupBox(self.widget)
+        self.groupBox.setObjectName(u"groupBox")
+        self.verticalLayout_3 = QVBoxLayout(self.groupBox)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 9, 0, 9)
+        self.update_day = QDateEdit(self.groupBox)
+        self.update_day.setObjectName(u"update_day")
+        self.update_day.setDateTime(QDateTime(QDate(2025, 8, 15), QTime(0, 0, 0)))
 
-        self.verticalLayout.addWidget(self.loadLocalBtn)
+        self.verticalLayout_3.addWidget(self.update_day)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer_5)
+
+        self.updateLocalBtn = PushButton(self.groupBox)
+        self.updateLocalBtn.setObjectName(u"updateLocalBtn")
+
+        self.verticalLayout_3.addWidget(self.updateLocalBtn)
+
+
+        self.verticalLayout.addWidget(self.groupBox)
 
         self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.verticalLayout.addItem(self.verticalSpacer_4)
 
-        self.updateLocalBtn = PushButton(self.widget)
-        self.updateLocalBtn.setObjectName(u"updateLocalBtn")
+        self.loadLocalBtn = PushButton(self.widget)
+        self.loadLocalBtn.setObjectName(u"loadLocalBtn")
 
-        self.verticalLayout.addWidget(self.updateLocalBtn)
+        self.verticalLayout.addWidget(self.loadLocalBtn)
 
         self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -92,8 +110,9 @@ class Ui_page_one(object):
 
     def retranslateUi(self, page_one):
         page_one.setWindowTitle(QCoreApplication.translate("page_one", u"Form", None))
-        self.loadLocalBtn.setText(QCoreApplication.translate("page_one", u"\u52a0\u8f7d\u672c\u5730\u6570\u636e", None))
+        self.groupBox.setTitle(QCoreApplication.translate("page_one", u"\u66f4\u65b0\u81f3", None))
         self.updateLocalBtn.setText(QCoreApplication.translate("page_one", u"\u66f4\u65b0\u672c\u5730\u6570\u636e", None))
+        self.loadLocalBtn.setText(QCoreApplication.translate("page_one", u"\u52a0\u8f7d\u672c\u5730\u6570\u636e", None))
         self.updateClearBtn.setText(QCoreApplication.translate("page_one", u"\u6e05\u7a7a", None))
     # retranslateUi
 

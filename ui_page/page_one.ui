@@ -59,10 +59,61 @@
        </spacer>
       </item>
       <item>
-       <widget class="PushButton" name="loadLocalBtn">
-        <property name="text">
-         <string>加载本地数据</string>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>更新至</string>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>9</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>9</number>
+         </property>
+         <item>
+          <widget class="QDateEdit" name="update_day">
+           <property name="dateTime">
+            <datetime>
+             <hour>0</hour>
+             <minute>0</minute>
+             <second>0</second>
+             <year>2025</year>
+             <month>8</month>
+             <day>15</day>
+            </datetime>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>10</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="PushButton" name="updateLocalBtn">
+           <property name="text">
+            <string>更新本地数据</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
@@ -82,9 +133,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="PushButton" name="updateLocalBtn">
+       <widget class="PushButton" name="loadLocalBtn">
         <property name="text">
-         <string>更新本地数据</string>
+         <string>加载本地数据</string>
         </property>
        </widget>
       </item>

@@ -31,49 +31,29 @@ def get_sh_series() -> pd.Series:
     """延迟加载上证指数日线"""
     global _sh_cache
     if _sh_cache is None:
-        df = load_or_update("000001", False)
+        df = load_or_update("000001", False, '')
         _sh_cache = df.set_index('日期')['收盘']
     return _sh_cache
 
 def _local_path(code: str) -> str:
     return os.path.join(CACHE_DIR, f"{code}.pkl")
 
-def last_trading_day() -> str:
-    """获取上一个交易日的日期"""
-    today = pd.Timestamp.today()
-    # 如果当前时间是下午3点之前，回退到上一个交易日
-    if today.hour < 15:
-        today -= pd.Timedelta(days=1)
-    # 如果今天是周末，回退到上一个周五
-    while today.weekday() >= 5:  # 周六或周日
-        today -= pd.Timedelta(days=1)
-    return today.strftime("%Y%m%d")
-    '''
-    """返回最近一个交易日（YYYYMMDD），周末/节假日自动跳过"""
-    today = datetime.date.today()
-    # 向前多找 10 天，确保至少有一条交易日
-    start_str = (today - datetime.timedelta(days=10)).strftime("%Y%m%d")
-    end_str   = today.strftime("%Y%m%d")
+def last_trading_day(date: str = None) -> str:
+    # 如果没有传入日期，则使用当前日期
+    if date is None:
+        dt = pd.Timestamp.today()
+    else:
+        dt = pd.to_datetime(date, format="%Y%m%d")
 
-    try:
-        # 用上证指数接口拉最近所有日期
-        df_idx = ak.stock_zh_index_daily(symbol="sh000001",
-                                         start_date=start_str,
-                                         end_date=end_str)
-        if df_idx.empty:
-            raise ValueError("空表")
-        df_idx['date'] = pd.to_datetime(df_idx['date'])
-        last_day = df_idx['date'].max()
-        return last_day.strftime("%Y%m%d")
-    except Exception:
-        # 兜底：继续往前找，直到拿到一条
-        offset = 1
-        while True:
-            candidate = today - datetime.timedelta(days=offset)
-            if candidate.weekday() < 5:           # 周一到周五
-                return candidate.strftime("%Y%m%d")
-            offset += 1
-    '''
+    # 如果当前时间是下午3点之前，回退到上一个交易日
+    if dt.hour < 15 and date is None:  # 只有使用当前日期时才考虑小时
+        dt -= pd.Timedelta(days=1)
+
+    # 如果日期是周末，回退到上一个周五
+    while dt.weekday() >= 5:  # 周六或周日
+        dt -= pd.Timedelta(days=1)
+
+    return dt.strftime("%Y%m%d")
 
 def load_or_update_stock_code_name_dict(update: bool = False, ak_spot = None):
     global _stock_code_name_dict
@@ -100,8 +80,7 @@ def load_or_update_stock_code_name_dict(update: bool = False, ak_spot = None):
         print("股票代码与名称字典库文件已保存到本地。")
 
 #更新个股信息,update为True才更新
-def load_or_update(code: str, update: bool) -> pd.DataFrame:
-    today_str = last_trading_day()
+def load_or_update(code: str, update: bool, update_day: str) -> pd.DataFrame:
     pkl_path = _local_path(code)
 
     # 加载或更新股票代码与名称字典库文件
@@ -134,19 +113,23 @@ def load_or_update(code: str, update: bool) -> pd.DataFrame:
         df_old = pd.DataFrame()
         last_date = pd.to_datetime(START_DATE) - pd.Timedelta(days=1)
 
-    if update and (pd.to_datetime(today_str).date() - last_date.date()).days >= 1:
-        start_str = (last_date + pd.Timedelta(days=1)).strftime("%Y%m%d")
-        print('{} need update, last:{}, start:{}, end{}'.format(code, last_date.date(), start_str, today_str))
-        time.sleep(random.uniform(0.8, 1.6))
-        df_new = ak.stock_zh_a_hist(symbol=code,
-                                    period="daily",
-                                    start_date=start_str,
-                                    end_date=today_str,
-                                    adjust=ADJUST)
-        if not df_new.empty:
-            df_new['日期'] = pd.to_datetime(df_new['日期'])
-            df_old = pd.concat([df_old, df_new]).drop_duplicates('日期').sort_values('日期')
-            df_old.to_pickle(pkl_path)
+    if update :
+        update_day_dt = pd.to_datetime(last_trading_day(update_day))  # 确保使用最近的交易日
+        if update_day_dt.date() > last_date.date():
+            start_str = (last_date + pd.Timedelta(days=1)).strftime("%Y%m%d")
+            end_str = update_day_dt.strftime("%Y%m%d")  # 使用调整后的交易日日期
+            print('{} need update, last:{}, start:{}, end{}'.format(code, last_date.date(), start_str, end_str))
+            #time.sleep(random.uniform(0.8, 1.6))
+            time.sleep(0.2)
+            df_new = ak.stock_zh_a_hist(symbol=code,
+                                        period="daily",
+                                        start_date=start_str,
+                                        end_date=end_str,
+                                        adjust=ADJUST)
+            if not df_new.empty:
+                df_new['日期'] = pd.to_datetime(df_new['日期'])
+                df_old = pd.concat([df_old, df_new]).drop_duplicates('日期').sort_values('日期')
+                df_old.to_pickle(pkl_path)
     return df_old
 
 def stock_name(code: str) -> str:
@@ -210,11 +193,11 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     names = spot.set_index('代码')['名称'].to_dict()
     return codes, names
 
-def get_stock_data(update: bool = False) -> Dict[str, pd.DataFrame]:
+def get_stock_data() -> Dict[str, pd.DataFrame]:
     global _global_stock_data_dict
     if _global_stock_data_dict is None:
         _global_stock_data_dict = {}
         codes, _ = get_all_stock_from_cache()
         for code in codes:
-            _global_stock_data_dict[code] = load_or_update(code, update)
+            _global_stock_data_dict[code] = load_or_update(code, False, '')
     return _global_stock_data_dict
