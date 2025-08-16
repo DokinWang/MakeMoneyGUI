@@ -10,15 +10,40 @@
     <height>605</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
    <item>
     <widget class="QWidget" name="widget_9" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
       <item>
-       <widget class="QTableWidget" name="stockBackTestTable"/>
+       <widget class="QTableWidget" name="stockBackTestTable">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QProgressBar" name="backTestProgress">
@@ -38,15 +63,33 @@
    </item>
    <item alignment="Qt::AlignRight">
     <widget class="QWidget" name="widget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
-       <width>190</width>
+       <width>16777215</width>
        <height>16777215</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item alignment="Qt::AlignLeft">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,0,1,1,1,1">
+      <item>
        <widget class="QWidget" name="widget_2" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
@@ -56,6 +99,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>策略周期：</string>
            </property>
@@ -63,6 +115,16 @@
          </item>
          <item>
           <widget class="QComboBox" name="policySelect">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;
+QComboBox \n{\n	combobox-popup: 0;\n}</string>
+           </property>
            <item>
             <property name="text">
              <string>三日线</string>
@@ -78,10 +140,10 @@
         </layout>
        </widget>
       </item>
-      <item alignment="Qt::AlignLeft">
+      <item>
        <widget class="QWidget" name="widget_5" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -93,8 +155,17 @@
          </size>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item alignment="Qt::AlignLeft">
+         <item>
           <widget class="QLabel" name="label_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>起始日期：</string>
            </property>
@@ -102,9 +173,27 @@
          </item>
          <item>
           <widget class="QDateEdit" name="startTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font/>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="dateTime">
             <datetime>
-             <hour>0</hour>
+             <hour>16</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -114,7 +203,7 @@
            </property>
            <property name="minimumDateTime">
             <datetime>
-             <hour>0</hour>
+             <hour>16</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -129,15 +218,18 @@
              <day>3</day>
             </date>
            </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
-      <item alignment="Qt::AlignLeft">
+      <item>
        <widget class="QWidget" name="widget_6" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -151,6 +243,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item alignment="Qt::AlignLeft">
           <widget class="QLabel" name="label_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>结束日期：</string>
            </property>
@@ -158,9 +259,24 @@
          </item>
          <item>
           <widget class="QDateEdit" name="endTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="dateTime">
             <datetime>
-             <hour>16</hour>
+             <hour>8</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2025</year>
@@ -192,6 +308,9 @@
              <second>0</second>
             </time>
            </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -200,7 +319,7 @@
       <item alignment="Qt::AlignLeft">
        <widget class="QWidget" name="widget_3" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -214,6 +333,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item alignment="Qt::AlignLeft">
           <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>上证最低：</string>
            </property>
@@ -223,15 +351,18 @@
           <widget class="QLineEdit" name="shMin">
            <property name="minimumSize">
             <size>
-             <width>60</width>
+             <width>100</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>60</width>
+             <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
             <string>3100</string>
@@ -247,7 +378,7 @@
       <item alignment="Qt::AlignLeft">
        <widget class="QWidget" name="widget_4" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -261,6 +392,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item alignment="Qt::AlignLeft">
           <widget class="QLabel" name="label_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>上证最高：</string>
            </property>
@@ -270,15 +410,18 @@
           <widget class="QLineEdit" name="shMax">
            <property name="minimumSize">
             <size>
-             <width>60</width>
+             <width>100</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>60</width>
+             <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
             <string>3600</string>
@@ -291,8 +434,27 @@
         </layout>
        </widget>
       </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="PushButton" name="backTestBtn">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>150</width>
@@ -301,9 +463,12 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>150</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
         </property>
         <property name="text">
          <string>回测</string>
@@ -326,7 +491,7 @@
       <item alignment="Qt::AlignLeft">
        <widget class="QWidget" name="widget_7" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -340,6 +505,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item alignment="Qt::AlignLeft">
           <widget class="QLabel" name="label_6">
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>平均收益率(%)：</string>
            </property>
@@ -355,9 +523,12 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>70</width>
+             <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
             <string>0</string>
@@ -376,7 +547,7 @@
       <item alignment="Qt::AlignLeft">
        <widget class="QWidget" name="widget_8" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -390,6 +561,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_8">
          <item alignment="Qt::AlignLeft">
           <widget class="QLabel" name="label_7">
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
            <property name="text">
             <string>平均持有天数：  </string>
            </property>
@@ -405,9 +579,12 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>70</width>
+             <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
             <string>0</string>

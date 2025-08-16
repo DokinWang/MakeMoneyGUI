@@ -52,6 +52,7 @@ class Ui_page_one(object):
 
         self.widget = QWidget(page_one)
         self.widget.setObjectName(u"widget")
+        self.widget.setMinimumSize(QSize(160, 0))
         self.verticalLayout = QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
@@ -65,7 +66,9 @@ class Ui_page_one(object):
         self.verticalLayout_3.setContentsMargins(0, 9, 0, 9)
         self.update_day = QDateEdit(self.groupBox)
         self.update_day.setObjectName(u"update_day")
-        self.update_day.setDateTime(QDateTime(QDate(2025, 8, 15), QTime(0, 0, 0)))
+        self.update_day.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.update_day.setDateTime(QDateTime(QDate(2025, 8, 14), QTime(16, 0, 0)))
+        self.update_day.setCalendarPopup(True)
 
         self.verticalLayout_3.addWidget(self.update_day)
 
@@ -75,6 +78,7 @@ class Ui_page_one(object):
 
         self.updateLocalBtn = PushButton(self.groupBox)
         self.updateLocalBtn.setObjectName(u"updateLocalBtn")
+        self.updateLocalBtn.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
 
         self.verticalLayout_3.addWidget(self.updateLocalBtn)
 
@@ -87,6 +91,7 @@ class Ui_page_one(object):
 
         self.loadLocalBtn = PushButton(self.widget)
         self.loadLocalBtn.setObjectName(u"loadLocalBtn")
+        self.loadLocalBtn.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
 
         self.verticalLayout.addWidget(self.loadLocalBtn)
 
@@ -96,6 +101,7 @@ class Ui_page_one(object):
 
         self.updateClearBtn = PushButton(self.widget)
         self.updateClearBtn.setObjectName(u"updateClearBtn")
+        self.updateClearBtn.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
 
         self.verticalLayout.addWidget(self.updateClearBtn)
 
