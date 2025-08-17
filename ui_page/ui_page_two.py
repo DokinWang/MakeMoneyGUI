@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QProgressBar,
-    QSizePolicy, QSpacerItem, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateEdit,
+    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+    QProgressBar, QSizePolicy, QSpacerItem, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 from qfluentwidgets import PushButton
 
@@ -88,6 +88,7 @@ class Ui_page_two(object):
         self.policySelect = QComboBox(self.widget_2)
         self.policySelect.addItem("")
         self.policySelect.addItem("")
+        self.policySelect.addItem("")
         self.policySelect.setObjectName(u"policySelect")
         self.policySelect.setMinimumSize(QSize(100, 0))
         self.policySelect.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";\n"
@@ -97,6 +98,47 @@ class Ui_page_two(object):
 
 
         self.verticalLayout.addWidget(self.widget_2)
+
+        self.widget_10 = QWidget(self.widget)
+        self.widget_10.setObjectName(u"widget_10")
+        sizePolicy.setHeightForWidth(self.widget_10.sizePolicy().hasHeightForWidth())
+        self.widget_10.setSizePolicy(sizePolicy)
+        self.widget_10.setMaximumSize(QSize(16777215, 40))
+        self.horizontalLayout_9 = QHBoxLayout(self.widget_10)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.label_8 = QLabel(self.widget_10)
+        self.label_8.setObjectName(u"label_8")
+        sizePolicy.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
+        self.label_8.setSizePolicy(sizePolicy)
+        self.label_8.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+
+        self.horizontalLayout_9.addWidget(self.label_8)
+
+        self.sellPos = QComboBox(self.widget_10)
+        self.sellPos.addItem("")
+        self.sellPos.addItem("")
+        self.sellPos.setObjectName(u"sellPos")
+        self.sellPos.setMinimumSize(QSize(100, 0))
+        self.sellPos.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";\n"
+"QComboBox \\n{\\n	combobox-popup: 0;\\n}")
+
+        self.horizontalLayout_9.addWidget(self.sellPos)
+
+
+        self.verticalLayout.addWidget(self.widget_10)
+
+        self.widget_11 = QWidget(self.widget)
+        self.widget_11.setObjectName(u"widget_11")
+        self.horizontalLayout_10 = QHBoxLayout(self.widget_11)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.breakUp = QCheckBox(self.widget_11)
+        self.breakUp.setObjectName(u"breakUp")
+        self.breakUp.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+
+        self.horizontalLayout_10.addWidget(self.breakUp)
+
+
+        self.verticalLayout.addWidget(self.widget_11)
 
         self.widget_5 = QWidget(self.widget)
         self.widget_5.setObjectName(u"widget_5")
@@ -124,8 +166,8 @@ class Ui_page_two(object):
         font = QFont()
         self.startTime.setFont(font)
         self.startTime.setStyleSheet(u"")
-        self.startTime.setDateTime(QDateTime(QDate(2023, 1, 3), QTime(16, 0, 0)))
-        self.startTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(16, 0, 0)))
+        self.startTime.setDateTime(QDateTime(QDate(2023, 1, 3), QTime(8, 0, 0)))
+        self.startTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(8, 0, 0)))
         self.startTime.setMinimumDate(QDate(2023, 1, 3))
         self.startTime.setCalendarPopup(True)
 
@@ -155,7 +197,7 @@ class Ui_page_two(object):
         self.endTime.setSizePolicy(sizePolicy2)
         self.endTime.setMinimumSize(QSize(100, 0))
         self.endTime.setStyleSheet(u"")
-        self.endTime.setDateTime(QDateTime(QDate(2025, 8, 12), QTime(8, 0, 0)))
+        self.endTime.setDateTime(QDateTime(QDate(2025, 8, 12), QTime(0, 0, 0)))
         self.endTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(0, 0, 0)))
         self.endTime.setMinimumDate(QDate(2023, 1, 3))
         self.endTime.setMinimumTime(QTime(0, 0, 0))
@@ -238,6 +280,32 @@ class Ui_page_two(object):
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
+        self.widget_12 = QWidget(self.widget)
+        self.widget_12.setObjectName(u"widget_12")
+        sizePolicy.setHeightForWidth(self.widget_12.sizePolicy().hasHeightForWidth())
+        self.widget_12.setSizePolicy(sizePolicy)
+        self.widget_12.setMaximumSize(QSize(200, 40))
+        self.horizontalLayout_11 = QHBoxLayout(self.widget_12)
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.label_9 = QLabel(self.widget_12)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+
+        self.horizontalLayout_11.addWidget(self.label_9, 0, Qt.AlignLeft)
+
+        self.day_ret = QLineEdit(self.widget_12)
+        self.day_ret.setObjectName(u"day_ret")
+        self.day_ret.setMinimumSize(QSize(70, 0))
+        self.day_ret.setMaximumSize(QSize(16777215, 16777215))
+        self.day_ret.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.day_ret.setAlignment(Qt.AlignCenter)
+        self.day_ret.setReadOnly(True)
+
+        self.horizontalLayout_11.addWidget(self.day_ret)
+
+
+        self.verticalLayout.addWidget(self.widget_12)
+
         self.widget_7 = QWidget(self.widget)
         self.widget_7.setObjectName(u"widget_7")
         sizePolicy.setHeightForWidth(self.widget_7.sizePolicy().hasHeightForWidth())
@@ -291,14 +359,14 @@ class Ui_page_two(object):
         self.verticalLayout.addWidget(self.widget_8, 0, Qt.AlignLeft)
 
         self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 1)
-        self.verticalLayout.setStretch(2, 1)
         self.verticalLayout.setStretch(3, 1)
         self.verticalLayout.setStretch(4, 1)
+        self.verticalLayout.setStretch(5, 1)
         self.verticalLayout.setStretch(6, 1)
-        self.verticalLayout.setStretch(7, 1)
         self.verticalLayout.setStretch(8, 1)
         self.verticalLayout.setStretch(9, 1)
+        self.verticalLayout.setStretch(11, 1)
+        self.verticalLayout.setStretch(12, 1)
 
         self.horizontalLayout.addWidget(self.widget, 0, Qt.AlignRight)
 
@@ -314,7 +382,13 @@ class Ui_page_two(object):
         self.label.setText(QCoreApplication.translate("page_two", u"\u7b56\u7565\u5468\u671f\uff1a", None))
         self.policySelect.setItemText(0, QCoreApplication.translate("page_two", u"\u4e09\u65e5\u7ebf", None))
         self.policySelect.setItemText(1, QCoreApplication.translate("page_two", u"\u5468\u7ebf", None))
+        self.policySelect.setItemText(2, QCoreApplication.translate("page_two", u"\u6708\u7ebf", None))
 
+        self.label_8.setText(QCoreApplication.translate("page_two", u"\u5356\u51fa\u4f4d\u7f6e\uff1a", None))
+        self.sellPos.setItemText(0, QCoreApplication.translate("page_two", u"boll\u4e2d\u8f68", None))
+        self.sellPos.setItemText(1, QCoreApplication.translate("page_two", u"boll\u4e0a\u8f68", None))
+
+        self.breakUp.setText(QCoreApplication.translate("page_two", u"\u4e70\u5165\u70b9\u5148\u7a81\u7834\u4e0a\u8f68", None))
         self.label_4.setText(QCoreApplication.translate("page_two", u"\u8d77\u59cb\u65e5\u671f\uff1a", None))
         self.label_5.setText(QCoreApplication.translate("page_two", u"\u7ed3\u675f\u65e5\u671f\uff1a", None))
         self.label_2.setText(QCoreApplication.translate("page_two", u"\u4e0a\u8bc1\u6700\u4f4e\uff1a", None))
@@ -322,6 +396,8 @@ class Ui_page_two(object):
         self.label_3.setText(QCoreApplication.translate("page_two", u"\u4e0a\u8bc1\u6700\u9ad8\uff1a", None))
         self.shMax.setText(QCoreApplication.translate("page_two", u"3600", None))
         self.backTestBtn.setText(QCoreApplication.translate("page_two", u"\u56de\u6d4b", None))
+        self.label_9.setText(QCoreApplication.translate("page_two", u"\u65e5\u5747\u6536\u76ca\u7387(%)\uff1a", None))
+        self.day_ret.setText(QCoreApplication.translate("page_two", u"0", None))
         self.label_6.setText(QCoreApplication.translate("page_two", u"\u5e73\u5747\u6536\u76ca\u7387(%)\uff1a", None))
         self.avg_ret.setText(QCoreApplication.translate("page_two", u"0", None))
         self.label_7.setText(QCoreApplication.translate("page_two", u"\u5e73\u5747\u6301\u6709\u5929\u6570\uff1a  ", None))

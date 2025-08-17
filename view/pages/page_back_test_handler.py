@@ -23,7 +23,9 @@ class PageBackTestHandler(QObject):
         self.back_reverse_fail.connect(self.back_reverse_test_fail)
 
     def boll_reverse_backtest_task(self,
-                                   policySelect :int,
+                                   policySelect :int,   # 0:三日线 1:周线 2:月线
+                                   sellPos: int,        # 0:中轨 1:上轨
+                                   upperBreak: bool,
                                    startTime: str,
                                    endTime: str,
                                    shMin: int,
@@ -34,7 +36,7 @@ class PageBackTestHandler(QObject):
             total = len(stock_data)
             cnt = 0
             for code, df in stock_data.items():
-                df_trades = boll_reverse_backtest(code, df, startTime, endTime, shMin, shMax)
+                df_trades = boll_reverse_backtest(code, df, policySelect, sellPos, upperBreak, startTime, endTime, shMin, shMax)
                 if df_trades.empty:
                     continue
                 self.back_reverse_data_signal.emit(df_trades)
@@ -52,6 +54,8 @@ class PageBackTestHandler(QObject):
     def back_test(self):
         self.set_progress(0)
         policySelect = self._parent.policySelect.currentIndex()
+        sellPos = self._parent.sellPos.currentIndex()
+        upperBreak = self._parent.breakUp.isChecked()
         startTime = ''
         endTime = ''
         shMin = 0
@@ -70,9 +74,9 @@ class PageBackTestHandler(QObject):
             self._parent.clear_stock_table()
             self.all_res = []
             task_manager.submit_task(
-                self.boll_reverse_backtest_task, args=(policySelect, startTime, endTime, shMin, shMax),
+                self.boll_reverse_backtest_task, args=(policySelect, sellPos, upperBreak, startTime, endTime, shMin, shMax),
                 kwargs={},
-                on_success=self.back_reverse_test_success,
+                on_success=self.back_reverse_test_success, 
                 on_error=lambda msg: self._parent.on_common_error(msg)
             )
         except RuntimeError as e:
@@ -131,9 +135,11 @@ class PageBackTestHandler(QObject):
         avg_ret = result['收益率'].mean()
         avg_days = result['持有天数'].mean()
 
+        day_ret = round(avg_ret * 100 / avg_days, 3)
         avg_ret = round(avg_ret * 100, 2)
         avg_days = round(avg_days, 2)
-
+        
+        self._parent.day_ret.setText(str(day_ret))
         self._parent.avg_ret.setText(str(avg_ret))
         self._parent.avg_days.setText(str(avg_days))
         show_dialog(self._parent, '回测结束')

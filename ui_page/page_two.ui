@@ -81,7 +81,7 @@
        <height>16777215</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,1,1,0,1,1,1,1">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0,1,1,1,1,0,1,1,0,1,1">
       <item>
        <widget class="QWidget" name="widget_2" native="true">
         <property name="sizePolicy">
@@ -135,6 +135,85 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
              <string>周线</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>月线</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_10" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>卖出位置：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="sellPos">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;
+QComboBox \n{\n	combobox-popup: 0;\n}</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>boll中轨</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>boll上轨</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_11" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <widget class="QCheckBox" name="breakUp">
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>买入点先突破上轨</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -193,7 +272,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="dateTime">
             <datetime>
-             <hour>16</hour>
+             <hour>8</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -203,7 +282,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="minimumDateTime">
             <datetime>
-             <hour>16</hour>
+             <hour>8</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -276,7 +355,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="dateTime">
             <datetime>
-             <hour>8</hour>
+             <hour>0</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2025</year>
@@ -487,6 +566,62 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_12" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>40</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item alignment="Qt::AlignLeft">
+          <widget class="QLabel" name="label_9">
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>日均收益率(%)：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="day_ret">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item alignment="Qt::AlignLeft">
        <widget class="QWidget" name="widget_7" native="true">
