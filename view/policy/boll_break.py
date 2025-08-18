@@ -3,11 +3,14 @@ import pandas as pd
 import datetime
 
 from typing import List, Dict, Tuple
-from view.policy.stock import get_cache_dir, get_sh_series, stock_name
+from view.policy.stock import get_cache_dir, get_sh_series, stock_name, update_sh
 
-def _sh_ok(dt, sh_min=3180, sh_max=3600) -> bool:
+def get_sh(dt) -> int:
     val = get_sh_series().get(dt)
-    return val is not None and sh_min <= val <= sh_max
+    if val is None:
+        update_sh()
+    val = get_sh_series().get(dt)
+    return val
 
 #推荐值:
 #3250 - 3450:3日线
@@ -71,7 +74,7 @@ def boll_reverse_backtest(code: str,
 
     upper_dates = sub.loc[sub['Break_Upper'], '日期'].tolist()
     lower_dates = sub.loc[sub['Break_Lower'], '日期'].tolist()
-
+    sh = 0
     trades = []
     if upperBreak:
         for up_date in reversed(upper_dates):
@@ -94,7 +97,8 @@ def boll_reverse_backtest(code: str,
             buy_bar = buy_day_candidates.iloc[0]
 
             # 检查上证指数是否在指定范围内
-            if not _sh_ok(buy_bar['日期'], sh_min, sh_max):
+            sh = get_sh(buy_bar['日期'])
+            if sh < sh_min or sh > sh_max:
                 continue  # 上证不在区间，跳过
 
             # 卖出日
@@ -150,7 +154,8 @@ def boll_reverse_backtest(code: str,
             buy_bar = buy_day_candidates.iloc[-1]
 
             # 检查上证指数是否在指定范围内
-            if not _sh_ok(buy_bar['日期'], sh_min, sh_max):
+            sh = get_sh(buy_bar['日期'])
+            if sh < sh_min or sh > sh_max:
                 continue  # 上证不在区间，跳过
 
             # 卖出日
@@ -188,7 +193,8 @@ def boll_reverse_backtest(code: str,
                 '买入日期': buy_bar['日期'].strftime("%Y-%m-%d"),
                 '卖出日期': sell_bar['日期'].strftime("%Y-%m-%d"),
                 '收益率': (sell_price - buy_price) / buy_price,
-                '持有天数': (sell_bar['日期'] - buy_bar['日期']).days
+                '持有天数': (sell_bar['日期'] - buy_bar['日期']).days,
+                '上证指数': sh
             })
 
             # 标记已经发生过买入操作

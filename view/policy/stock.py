@@ -35,6 +35,11 @@ def get_sh_series() -> pd.Series:
         _sh_cache = df.set_index('日期')['收盘']
     return _sh_cache
 
+def update_sh():
+    global _sh_cache
+    df = load_or_update("000001", True, last_trading_day())
+    _sh_cache = df.set_index('日期')['收盘']
+
 def _local_path(code: str) -> str:
     return os.path.join(CACHE_DIR, f"{code}.pkl")
 

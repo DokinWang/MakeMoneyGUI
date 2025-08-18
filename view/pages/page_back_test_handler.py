@@ -116,6 +116,9 @@ class PageBackTestHandler(QObject):
                 table.setItem(pos, 7, QTableWidgetItem(str(row['持有天数'])))
                 table.item(pos, 7).setTextAlignment(Qt.AlignCenter)  # 持有天数居中
 
+                table.setItem(pos, 8, QTableWidgetItem(str(row['上证指数'])))
+                table.item(pos, 8).setTextAlignment(Qt.AlignCenter)  # 上证指数居中
+
                 table.scrollToBottom()
 
     def set_progress(self, progress):

@@ -13,9 +13,10 @@ class PageBackTest(QWidget, Ui_page_two):
         self.bind_event()
 
     def form_init(self):
-        self.stockBackTestTable.setColumnCount(8)
-        self.stockBackTestTable.setHorizontalHeaderLabels(['股票代码', '名称', '买入价', '卖出价', '买入日期', '卖出日期', '收益率', '持有天数'])
-        self.stockBackTestTable.setColumnWidth(0, 100)
+        self.stockBackTestTable.setColumnCount(9)
+        self.stockBackTestTable.setHorizontalHeaderLabels(['股票代码', '名称', '买入价', '卖出价', '买入日期',
+                                                           '卖出日期', '收益率', '持有天数', '上证指数'])
+        self.stockBackTestTable.setColumnWidth(0, 80)
         self.stockBackTestTable.setColumnWidth(1, 100)
         self.stockBackTestTable.setColumnWidth(2, 100)
         self.stockBackTestTable.setColumnWidth(3, 100)
@@ -23,6 +24,7 @@ class PageBackTest(QWidget, Ui_page_two):
         self.stockBackTestTable.setColumnWidth(5, 100)
         self.stockBackTestTable.setColumnWidth(6, 100)
         self.stockBackTestTable.setColumnWidth(7, 100)
+        self.stockBackTestTable.setColumnWidth(8, 100)
         self.stockBackTestTable.setAlternatingRowColors(True)
 
     def bind_event(self):
