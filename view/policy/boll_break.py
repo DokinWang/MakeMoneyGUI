@@ -136,7 +136,8 @@ def boll_reverse_backtest(code: str,
                 '买入日期': buy_bar['日期'].strftime("%Y-%m-%d"),
                 '卖出日期': sell_bar['日期'].strftime("%Y-%m-%d"),
                 '收益率': (sell_price - buy_price) / buy_price,
-                '持有天数': (sell_bar['日期'] - buy_bar['日期']).days
+                '持有天数': (sell_bar['日期'] - buy_bar['日期']).days,
+                '上证指数': sh
             })
     else:
         # 标记是否已经发生过买入操作
