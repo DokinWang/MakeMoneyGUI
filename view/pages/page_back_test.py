@@ -1,4 +1,6 @@
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QMenu
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction
 from components.bar import ProgressInfoBar
 from ui_page.ui_page_two import Ui_page_two
 from view.pages.page_back_test_handler import PageBackTestHandler
@@ -15,7 +17,7 @@ class PageBackTest(QWidget, Ui_page_two):
     def form_init(self):
         self.stockBackTestTable.setColumnCount(9)
         self.stockBackTestTable.setHorizontalHeaderLabels(['股票代码', '名称', '买入价', '卖出价', '买入日期',
-                                                           '卖出日期', '收益率', '持有天数', '上证指数'])
+                                                           '卖出日期', '收益率（%）', '持有天数', '上证指数'])
         self.stockBackTestTable.setColumnWidth(0, 80)
         self.stockBackTestTable.setColumnWidth(1, 100)
         self.stockBackTestTable.setColumnWidth(2, 100)
@@ -26,6 +28,25 @@ class PageBackTest(QWidget, Ui_page_two):
         self.stockBackTestTable.setColumnWidth(7, 100)
         self.stockBackTestTable.setColumnWidth(8, 100)
         self.stockBackTestTable.setAlternatingRowColors(True)
+
+        # 让表头接收右键事件
+        header = self.stockBackTestTable.horizontalHeader()
+        header.setContextMenuPolicy(Qt.CustomContextMenu)
+        header.customContextMenuRequested.connect(self.header_context_menu)
+
+    def header_context_menu(self, pos):
+        col = self.stockBackTestTable.horizontalHeader().logicalIndexAt(pos)
+
+        menu = QMenu(self.stockBackTestTable)
+        asc_act = QAction("⬆ 升序排列", self.stockBackTestTable)
+        desc_act = QAction("⬇ 降序排列", self.stockBackTestTable)
+        menu.addAction(asc_act)
+        menu.addAction(desc_act)
+
+        asc_act.triggered.connect(lambda: self.stockBackTestTable.sortByColumn(col, Qt.AscendingOrder))
+        desc_act.triggered.connect(lambda: self.stockBackTestTable.sortByColumn(col, Qt.DescendingOrder))
+
+        menu.exec(self.stockBackTestTable.horizontalHeader().viewport().mapToGlobal(pos))
 
     def bind_event(self):
         self.backTestBtn.clicked.connect(self.handler.back_test)

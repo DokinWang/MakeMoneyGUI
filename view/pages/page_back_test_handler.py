@@ -110,7 +110,9 @@ class PageBackTestHandler(QObject):
                 table.setItem(pos, 5, QTableWidgetItem(row['卖出日期']))
                 table.item(pos, 5).setTextAlignment(Qt.AlignCenter)  # 卖出日期居中
 
-                table.setItem(pos, 6, QTableWidgetItem(f"{row['收益率']:.2%}"))
+                item = QTableWidgetItem()
+                item.setData(Qt.DisplayRole, round(float(row['收益率'] * 100), 2))  # 存 float
+                table.setItem(pos, 6, item)
                 table.item(pos, 6).setTextAlignment(Qt.AlignCenter)  # 收益率居中
 
                 table.setItem(pos, 7, QTableWidgetItem(str(row['持有天数'])))
