@@ -81,7 +81,7 @@
        <height>16777215</height>
       </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0,1,1,1,1,0,1,1,0,1,1">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0,1,1,1,0,0,0,1,1,0,1,1">
       <item>
        <widget class="QWidget" name="widget_2" native="true">
         <property name="sizePolicy">
@@ -272,7 +272,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="dateTime">
             <datetime>
-             <hour>8</hour>
+             <hour>0</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -282,7 +282,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="minimumDateTime">
             <datetime>
-             <hour>8</hour>
+             <hour>0</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2023</year>
@@ -355,12 +355,12 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
            <property name="dateTime">
             <datetime>
-             <hour>0</hour>
+             <hour>16</hour>
              <minute>0</minute>
              <second>0</second>
              <year>2025</year>
              <month>8</month>
-             <day>12</day>
+             <day>11</day>
             </datetime>
            </property>
            <property name="minimumDateTime">
@@ -422,7 +422,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
             <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
-            <string>上证最低：</string>
+            <string>上证范围：</string>
            </property>
           </widget>
          </item>
@@ -430,13 +430,13 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
           <widget class="QLineEdit" name="shMin">
            <property name="minimumSize">
             <size>
-             <width>100</width>
+             <width>50</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>50</width>
              <height>16777215</height>
             </size>
            </property>
@@ -451,10 +451,35 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLineEdit" name="shMax">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>3600</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
-      <item alignment="Qt::AlignLeft">
+      <item>
        <widget class="QWidget" name="widget_4" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -469,7 +494,7 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
          </size>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item alignment="Qt::AlignLeft">
+         <item>
           <widget class="QLabel" name="label_3">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -481,21 +506,21 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
             <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
-            <string>上证最高：</string>
+            <string>市值范围：</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="shMax">
+          <widget class="QLineEdit" name="marketValMin">
            <property name="minimumSize">
             <size>
-             <width>100</width>
+             <width>50</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
+             <width>50</width>
              <height>16777215</height>
             </size>
            </property>
@@ -503,7 +528,116 @@ QComboBox \n{\n	combobox-popup: 0;\n}</string>
             <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
            <property name="text">
-            <string>3600</string>
+            <string>50</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="marketValMax">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>5000</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_13" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>40</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>市盈率：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="peRatioMin">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>20</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="peRatioMax">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 11pt &quot;Microsoft YaHei UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>80</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>

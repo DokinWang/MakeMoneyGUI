@@ -166,8 +166,8 @@ class Ui_page_two(object):
         font = QFont()
         self.startTime.setFont(font)
         self.startTime.setStyleSheet(u"")
-        self.startTime.setDateTime(QDateTime(QDate(2023, 1, 3), QTime(8, 0, 0)))
-        self.startTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(8, 0, 0)))
+        self.startTime.setDateTime(QDateTime(QDate(2023, 1, 3), QTime(0, 0, 0)))
+        self.startTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(0, 0, 0)))
         self.startTime.setMinimumDate(QDate(2023, 1, 3))
         self.startTime.setCalendarPopup(True)
 
@@ -197,7 +197,7 @@ class Ui_page_two(object):
         self.endTime.setSizePolicy(sizePolicy2)
         self.endTime.setMinimumSize(QSize(100, 0))
         self.endTime.setStyleSheet(u"")
-        self.endTime.setDateTime(QDateTime(QDate(2025, 8, 12), QTime(0, 0, 0)))
+        self.endTime.setDateTime(QDateTime(QDate(2025, 8, 11), QTime(16, 0, 0)))
         self.endTime.setMinimumDateTime(QDateTime(QDate(2023, 1, 3), QTime(0, 0, 0)))
         self.endTime.setMinimumDate(QDate(2023, 1, 3))
         self.endTime.setMinimumTime(QTime(0, 0, 0))
@@ -225,12 +225,21 @@ class Ui_page_two(object):
 
         self.shMin = QLineEdit(self.widget_3)
         self.shMin.setObjectName(u"shMin")
-        self.shMin.setMinimumSize(QSize(100, 0))
-        self.shMin.setMaximumSize(QSize(16777215, 16777215))
+        self.shMin.setMinimumSize(QSize(50, 0))
+        self.shMin.setMaximumSize(QSize(50, 16777215))
         self.shMin.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
         self.shMin.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_3.addWidget(self.shMin)
+
+        self.shMax = QLineEdit(self.widget_3)
+        self.shMax.setObjectName(u"shMax")
+        self.shMax.setMinimumSize(QSize(50, 0))
+        self.shMax.setMaximumSize(QSize(50, 16777215))
+        self.shMax.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.shMax.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_3.addWidget(self.shMax)
 
 
         self.verticalLayout.addWidget(self.widget_3, 0, Qt.AlignLeft)
@@ -248,19 +257,64 @@ class Ui_page_two(object):
         self.label_3.setSizePolicy(sizePolicy)
         self.label_3.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
 
-        self.horizontalLayout_4.addWidget(self.label_3, 0, Qt.AlignLeft)
+        self.horizontalLayout_4.addWidget(self.label_3)
 
-        self.shMax = QLineEdit(self.widget_4)
-        self.shMax.setObjectName(u"shMax")
-        self.shMax.setMinimumSize(QSize(100, 0))
-        self.shMax.setMaximumSize(QSize(16777215, 16777215))
-        self.shMax.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
-        self.shMax.setAlignment(Qt.AlignCenter)
+        self.marketValMin = QLineEdit(self.widget_4)
+        self.marketValMin.setObjectName(u"marketValMin")
+        self.marketValMin.setMinimumSize(QSize(50, 0))
+        self.marketValMin.setMaximumSize(QSize(50, 16777215))
+        self.marketValMin.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.marketValMin.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_4.addWidget(self.shMax)
+        self.horizontalLayout_4.addWidget(self.marketValMin)
+
+        self.marketValMax = QLineEdit(self.widget_4)
+        self.marketValMax.setObjectName(u"marketValMax")
+        self.marketValMax.setMinimumSize(QSize(50, 0))
+        self.marketValMax.setMaximumSize(QSize(50, 16777215))
+        self.marketValMax.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.marketValMax.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_4.addWidget(self.marketValMax)
 
 
-        self.verticalLayout.addWidget(self.widget_4, 0, Qt.AlignLeft)
+        self.verticalLayout.addWidget(self.widget_4)
+
+        self.widget_13 = QWidget(self.widget)
+        self.widget_13.setObjectName(u"widget_13")
+        sizePolicy.setHeightForWidth(self.widget_13.sizePolicy().hasHeightForWidth())
+        self.widget_13.setSizePolicy(sizePolicy)
+        self.widget_13.setMaximumSize(QSize(200, 40))
+        self.horizontalLayout_12 = QHBoxLayout(self.widget_13)
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.label_10 = QLabel(self.widget_13)
+        self.label_10.setObjectName(u"label_10")
+        sizePolicy.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy)
+        self.label_10.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+
+        self.horizontalLayout_12.addWidget(self.label_10)
+
+        self.peRatioMin = QLineEdit(self.widget_13)
+        self.peRatioMin.setObjectName(u"peRatioMin")
+        self.peRatioMin.setMinimumSize(QSize(50, 0))
+        self.peRatioMin.setMaximumSize(QSize(50, 16777215))
+        self.peRatioMin.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.peRatioMin.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_12.addWidget(self.peRatioMin)
+
+        self.peRatioMax = QLineEdit(self.widget_13)
+        self.peRatioMax.setObjectName(u"peRatioMax")
+        self.peRatioMax.setMinimumSize(QSize(50, 0))
+        self.peRatioMax.setMaximumSize(QSize(50, 16777215))
+        self.peRatioMax.setStyleSheet(u"font: 11pt \"Microsoft YaHei UI\";")
+        self.peRatioMax.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_12.addWidget(self.peRatioMax)
+
+
+        self.verticalLayout.addWidget(self.widget_13)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -362,11 +416,10 @@ class Ui_page_two(object):
         self.verticalLayout.setStretch(3, 1)
         self.verticalLayout.setStretch(4, 1)
         self.verticalLayout.setStretch(5, 1)
-        self.verticalLayout.setStretch(6, 1)
-        self.verticalLayout.setStretch(8, 1)
         self.verticalLayout.setStretch(9, 1)
-        self.verticalLayout.setStretch(11, 1)
+        self.verticalLayout.setStretch(10, 1)
         self.verticalLayout.setStretch(12, 1)
+        self.verticalLayout.setStretch(13, 1)
 
         self.horizontalLayout.addWidget(self.widget, 0, Qt.AlignRight)
 
@@ -391,10 +444,15 @@ class Ui_page_two(object):
         self.breakUp.setText(QCoreApplication.translate("page_two", u"\u4e70\u5165\u70b9\u5148\u7a81\u7834\u4e0a\u8f68", None))
         self.label_4.setText(QCoreApplication.translate("page_two", u"\u8d77\u59cb\u65e5\u671f\uff1a", None))
         self.label_5.setText(QCoreApplication.translate("page_two", u"\u7ed3\u675f\u65e5\u671f\uff1a", None))
-        self.label_2.setText(QCoreApplication.translate("page_two", u"\u4e0a\u8bc1\u6700\u4f4e\uff1a", None))
+        self.label_2.setText(QCoreApplication.translate("page_two", u"\u4e0a\u8bc1\u8303\u56f4\uff1a", None))
         self.shMin.setText(QCoreApplication.translate("page_two", u"3100", None))
-        self.label_3.setText(QCoreApplication.translate("page_two", u"\u4e0a\u8bc1\u6700\u9ad8\uff1a", None))
         self.shMax.setText(QCoreApplication.translate("page_two", u"3600", None))
+        self.label_3.setText(QCoreApplication.translate("page_two", u"\u5e02\u503c\u8303\u56f4\uff1a", None))
+        self.marketValMin.setText(QCoreApplication.translate("page_two", u"50", None))
+        self.marketValMax.setText(QCoreApplication.translate("page_two", u"5000", None))
+        self.label_10.setText(QCoreApplication.translate("page_two", u"\u5e02\u76c8\u7387\uff1a", None))
+        self.peRatioMin.setText(QCoreApplication.translate("page_two", u"20", None))
+        self.peRatioMax.setText(QCoreApplication.translate("page_two", u"80", None))
         self.backTestBtn.setText(QCoreApplication.translate("page_two", u"\u56de\u6d4b", None))
         self.label_9.setText(QCoreApplication.translate("page_two", u"\u65e5\u5747\u6536\u76ca\u7387(%)\uff1a", None))
         self.day_ret.setText(QCoreApplication.translate("page_two", u"0", None))

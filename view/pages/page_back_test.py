@@ -15,18 +15,21 @@ class PageBackTest(QWidget, Ui_page_two):
         self.bind_event()
 
     def form_init(self):
-        self.stockBackTestTable.setColumnCount(9)
+        self.stockBackTestTable.setColumnCount(11)
         self.stockBackTestTable.setHorizontalHeaderLabels(['股票代码', '名称', '买入价', '卖出价', '买入日期',
-                                                           '卖出日期', '收益率（%）', '持有天数', '上证指数'])
+                                                           '卖出日期', '收益率（%）', '持有天数', '上证指数',
+                                                           '当前市值(亿)', '当前市盈率'])
         self.stockBackTestTable.setColumnWidth(0, 80)
-        self.stockBackTestTable.setColumnWidth(1, 100)
-        self.stockBackTestTable.setColumnWidth(2, 100)
-        self.stockBackTestTable.setColumnWidth(3, 100)
+        self.stockBackTestTable.setColumnWidth(1, 80)
+        self.stockBackTestTable.setColumnWidth(2, 60)
+        self.stockBackTestTable.setColumnWidth(3, 60)
         self.stockBackTestTable.setColumnWidth(4, 100)
         self.stockBackTestTable.setColumnWidth(5, 100)
-        self.stockBackTestTable.setColumnWidth(6, 100)
-        self.stockBackTestTable.setColumnWidth(7, 100)
-        self.stockBackTestTable.setColumnWidth(8, 100)
+        self.stockBackTestTable.setColumnWidth(6, 80)
+        self.stockBackTestTable.setColumnWidth(7, 80)
+        self.stockBackTestTable.setColumnWidth(8, 80)
+        self.stockBackTestTable.setColumnWidth(9, 80)
+        self.stockBackTestTable.setColumnWidth(10, 80)
         self.stockBackTestTable.setAlternatingRowColors(True)
 
         # 让表头接收右键事件

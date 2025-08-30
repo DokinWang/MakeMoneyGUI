@@ -29,14 +29,19 @@ class PageBackTestHandler(QObject):
                                    startTime: str,
                                    endTime: str,
                                    shMin: int,
-                                   shMax: int):
+                                   shMax: int,
+                                   marketValMin: int,
+                                   marketValMax: int,
+                                   peRatioMin: int,
+                                   peRatioMax: int):
         self.progress_signal.emit(0)
         stock_data = get_stock_data()
         if stock_data is not None:
             total = len(stock_data)
             cnt = 0
             for code, df in stock_data.items():
-                df_trades = boll_reverse_backtest(code, df, policySelect, sellPos, upperBreak, startTime, endTime, shMin, shMax)
+                df_trades = boll_reverse_backtest(code, df, policySelect, sellPos, upperBreak, startTime, endTime,
+                                                  shMin, shMax, marketValMin, marketValMax, peRatioMin, peRatioMax)
                 if df_trades.empty:
                     continue
                 self.back_reverse_data_signal.emit(df_trades)
@@ -60,11 +65,19 @@ class PageBackTestHandler(QObject):
         endTime = ''
         shMin = 0
         shMax = 0
+        marketValMin = 0
+        marketValMax = 0
+        peRatioMin = 0
+        peRatioMax = 0
         try:
             startTime = self._parent.startTime.date().toString("yyyyMMdd")
             endTime = self._parent.endTime.date().toString("yyyyMMdd")
             shMin = int(self._parent.shMin.text())
             shMax = int(self._parent.shMax.text())
+            marketValMin = int(self._parent.marketValMin.text())
+            marketValMax = int(self._parent.marketValMax.text())
+            peRatioMin = int(self._parent.peRatioMin.text())
+            peRatioMax = int(self._parent.peRatioMax.text())
         except ValueError:
             show_dialog(self._parent, '输入了非法数据')
             return
@@ -74,7 +87,8 @@ class PageBackTestHandler(QObject):
             self._parent.clear_stock_table()
             self.all_res = []
             task_manager.submit_task(
-                self.boll_reverse_backtest_task, args=(policySelect, sellPos, upperBreak, startTime, endTime, shMin, shMax),
+                self.boll_reverse_backtest_task, args=(policySelect, sellPos, upperBreak, startTime, endTime,
+                                                       shMin, shMax, marketValMin, marketValMax, peRatioMin, peRatioMax),
                 kwargs={},
                 on_success=self.back_reverse_test_success, 
                 on_error=lambda msg: self._parent.on_common_error(msg)
@@ -121,6 +135,11 @@ class PageBackTestHandler(QObject):
                 table.setItem(pos, 8, QTableWidgetItem(str(row['上证指数'])))
                 table.item(pos, 8).setTextAlignment(Qt.AlignCenter)  # 上证指数居中
 
+                table.setItem(pos, 9, QTableWidgetItem(str(row['市值'])))
+                table.item(pos, 9).setTextAlignment(Qt.AlignCenter)  # 市值居中
+
+                table.setItem(pos, 10, QTableWidgetItem(str(row['市盈率'])))
+                table.item(pos, 10).setTextAlignment(Qt.AlignCenter)  # 市盈率居中
                 table.scrollToBottom()
 
     def set_progress(self, progress):

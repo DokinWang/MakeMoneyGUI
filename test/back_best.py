@@ -25,7 +25,7 @@ def _get_sh_series() -> pd.Series:
     """延迟加载上证指数日线"""
     global _sh_cache
     if _sh_cache is None:
-        df = load_or_update("000001", True)
+        df = load_or_update("000001", False, '')
         _sh_cache = df.set_index('日期')['收盘']
     return _sh_cache
 

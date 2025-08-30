@@ -24,6 +24,8 @@ STOCK_CODE_NAME_DICT_FILE = os.path.join(CACHE_DIR, "stock_code_name_dict.pkl")
 # 全局变量，存储股票代码到 DataFrame 的映射
 _global_stock_data_dict: Dict[str, pd.DataFrame] = None
 
+_curr_all_stock = None
+_all_stock_file_path = "cache/all_stock.pkl"
 def get_cache_dir() -> str:
     return CACHE_DIR
 
@@ -39,6 +41,38 @@ def update_sh():
     global _sh_cache
     df = load_or_update("000001", True, last_trading_day())
     _sh_cache = df.set_index('日期')['收盘']
+
+def get_current_stock_info(update: bool = False):
+    global _curr_all_stock
+
+    if _curr_all_stock is not None:
+        return _curr_all_stock
+
+    # 检查缓存文件是否存在
+    if os.path.exists(_all_stock_file_path):
+        # 加载缓存文件
+        _curr_all_stock = pd.read_pickle(_all_stock_file_path)
+        # 检查数据是否为当天的
+        if not update and _is_today_data(_curr_all_stock):
+            return _curr_all_stock
+
+    # 如果缓存文件不存在或数据不是当天的，更新数据
+    _curr_all_stock = ak.stock_zh_a_spot_em()
+    # 添加日期列
+    _curr_all_stock['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')  # 使用 datetime.now()
+    # 保存到缓存文件
+    os.makedirs(os.path.dirname(_all_stock_file_path), exist_ok=True)
+    _curr_all_stock.to_pickle(_all_stock_file_path)
+    print("数据已更新并保存到缓存文件")
+    return _curr_all_stock
+
+def _is_today_data(data: pd.DataFrame) -> bool:
+    # 获取数据中的最新日期
+    if '日期' not in data.columns:
+        return False  # 如果没有日期列，返回 False
+    latest_date = data['日期'].max()
+    # 检查是否为当天日期
+    return latest_date == datetime.datetime.now().strftime('%Y-%m-%d')
 
 def _local_path(code: str) -> str:
     return os.path.join(CACHE_DIR, f"{code}.pkl")
@@ -125,7 +159,7 @@ def load_or_update(code: str, update: bool, update_day: str) -> pd.DataFrame:
             end_str = update_day_dt.strftime("%Y%m%d")  # 使用调整后的交易日日期
             print('{} need update, last:{}, start:{}, end{}'.format(code, last_date.date(), start_str, end_str))
             #time.sleep(random.uniform(0.8, 1.6))
-            time.sleep(0.2)
+            #time.sleep(0.2)
             df_new = ak.stock_zh_a_hist(symbol=code,
                                         period="daily",
                                         start_date=start_str,
@@ -167,7 +201,7 @@ def get_all_stock_from_cache() -> Tuple[List[str], Dict[str, str]]:
     return codes, names
 
 def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
-    spot = ak.stock_zh_a_spot_em()
+    spot = get_current_stock_info()
 
     load_or_update_stock_code_name_dict(update=True, ak_spot=spot)
 

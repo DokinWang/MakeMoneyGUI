@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 
 from typing import List, Dict, Tuple
-from view.policy.stock import get_cache_dir, get_sh_series, stock_name, update_sh
+from view.policy.stock import get_cache_dir, get_sh_series, stock_name, update_sh, get_current_stock_info
 
 def get_sh(dt) -> int:
     val = get_sh_series().get(dt)
@@ -11,7 +11,6 @@ def get_sh(dt) -> int:
         update_sh()
     val = get_sh_series().get(dt)
     return val
-
 #推荐值:
 #3250 - 3450:3日线
 #3450以上:周线
@@ -25,6 +24,10 @@ def boll_reverse_backtest(code: str,
                           period_e: str = None,
                           sh_min: int = 3100,
                           sh_max: int = 3600,
+                          marketValMin: int = 50,
+                          marketValMax: int = 20000,
+                          peRatioMin: int = 20,
+                          peRatioMax: int = 80,
                           window: int = 20) -> pd.DataFrame:
     if period_e is None:
         period_e = datetime.date.today().strftime("%Y-%m-%d")
@@ -76,6 +79,15 @@ def boll_reverse_backtest(code: str,
     lower_dates = sub.loc[sub['Break_Lower'], '日期'].tolist()
     sh = 0
     trades = []
+    curr_stock_info = get_current_stock_info()
+    stock_info = curr_stock_info[curr_stock_info['代码'] == code]
+    marketVal = stock_info['总市值'].values[0] / 100000000
+    if marketVal < marketValMin or marketVal > marketValMax:
+        return pd.DataFrame(trades)
+    peRatio = stock_info['市盈率-动态'].values[0]
+    if peRatio < peRatioMin or peRatio > peRatioMax:
+        return pd.DataFrame(trades)
+
     if upperBreak:
         for up_date in reversed(upper_dates):
             lows_after = [d for d in lower_dates if d > up_date]
@@ -126,6 +138,8 @@ def boll_reverse_backtest(code: str,
             # 保留两位小数
             buy_price = round(buy_price, 2)
             sell_price = round(sell_price, 2)
+            marketVal = round(marketVal, 2)
+            peRatio = round(peRatio, 2)
 
             name = stock_name(code)
             trades.append({
@@ -137,7 +151,9 @@ def boll_reverse_backtest(code: str,
                 '卖出日期': sell_bar['日期'].strftime("%Y-%m-%d"),
                 '收益率': (sell_price - buy_price) / buy_price,
                 '持有天数': (sell_bar['日期'] - buy_bar['日期']).days,
-                '上证指数': sh
+                '上证指数': sh,
+                '市值': marketVal,
+                '市盈率': peRatio
             })
     else:
         # 标记是否已经发生过买入操作
@@ -181,9 +197,26 @@ def boll_reverse_backtest(code: str,
                 continue
             sell_bar = sell_day_candidates.iloc[0]
 
+
+            # 逐天遍历，检查是否跌破买入价的90%
+            sell_candidates = df[(df['日期'] > buy_bar['日期']) & (df['日期'] <= sell_bar['日期'])]
+            threshold_price = buy_price * 0.9  # 买入价的90%
+            for _, row in sell_candidates.iterrows():
+                if row['最低'] <= threshold_price and (row['日期'] - buy_bar['日期']).days > 80:
+                    # 如果某一天的最低价跌破了买入价的90%，则在这一天卖出
+                    sell_date = row['日期']
+                    sell_price = threshold_price
+                    break
+                if row['收盘'] > buy_price and (row['日期'] - buy_bar['日期']).days > 80:
+                    sell_date = row['日期']
+                    sell_price = row['收盘']
+                    break
+
             # 保留两位小数
             buy_price = round(buy_price, 2)
             sell_price = round(sell_price, 2)
+            marketVal = round(marketVal, 2)
+            peRatio = round(peRatio, 2)
 
             name = stock_name(code)
             trades.append({
@@ -195,7 +228,9 @@ def boll_reverse_backtest(code: str,
                 '卖出日期': sell_bar['日期'].strftime("%Y-%m-%d"),
                 '收益率': (sell_price - buy_price) / buy_price,
                 '持有天数': (sell_bar['日期'] - buy_bar['日期']).days,
-                '上证指数': sh
+                '上证指数': sh,
+                '市值': marketVal,
+                '市盈率': peRatio
             })
 
             # 标记已经发生过买入操作
