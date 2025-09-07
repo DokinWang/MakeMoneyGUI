@@ -158,8 +158,8 @@ def load_or_update(code: str, update: bool, update_day: str) -> pd.DataFrame:
             start_str = (last_date + pd.Timedelta(days=1)).strftime("%Y%m%d")
             end_str = update_day_dt.strftime("%Y%m%d")  # 使用调整后的交易日日期
             print('{} need update, last:{}, start:{}, end{}'.format(code, last_date.date(), start_str, end_str))
-            #time.sleep(random.uniform(0.8, 1.6))
-            #time.sleep(0.2)
+            #time.sleep(random.uniform(0.2, 0.3))
+            time.sleep(0.2)
             df_new = ak.stock_zh_a_hist(symbol=code,
                                         period="daily",
                                         start_date=start_str,
@@ -203,7 +203,23 @@ def get_all_stock_from_cache() -> Tuple[List[str], Dict[str, str]]:
 def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     spot = get_current_stock_info()
 
-    load_or_update_stock_code_name_dict(update=True, ak_spot=spot)
+    sh_delist = ak.stock_info_sh_delist()
+    delist_codes = set(sh_delist['公司代码'].astype(str).str.zfill(6))
+
+    spot = spot[~spot['代码'].isin(delist_codes)]
+
+
+    # 增强退市股票过滤条件
+    delisting_keywords = ['退市', '退', 'DELIST', '终止上市']
+    delisting_pattern = '|'.join(delisting_keywords)
+
+    spot = spot[~spot['名称'].str.contains(delisting_pattern, na=False, case=False)]
+
+    if '退市整理' in spot.columns or 'delisting_status' in spot.columns:
+        status_col = '退市整理' if '退市整理' in spot.columns else 'delisting_status'
+        spot = spot[spot[status_col] != 1]  # 假设1表示退市状态
+
+    #spot = spot[~spot['名称'].str.startswith('退市', na=False)]
 
     spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]
     spot = spot[~spot['名称'].str.contains('ST', na=False)]
@@ -227,6 +243,8 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
         raise RuntimeError("找不到市盈率字段")
     spot = spot[spot[pe_col].notna() & spot[pe_col].between(pe_low, pe_high)]
     '''
+
+    load_or_update_stock_code_name_dict(update=True, ak_spot=spot)
 
     codes = spot['代码'].str.zfill(6).tolist()
     names = spot.set_index('代码')['名称'].to_dict()

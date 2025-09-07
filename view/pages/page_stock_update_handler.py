@@ -25,6 +25,9 @@ class PageOneHandler(QObject):
             for code in codes:
                 df = load_or_update(code, update, update_day)
 
+                if '日期' not in df.columns:
+                    print(f"[{code}] 缺失列：日期，跳过")
+                    continue
                 # 确保日期列是 datetime 类型（虽然代码中已经转换过了，但这里再确认一下）
                 df['日期'] = pd.to_datetime(df['日期'])
 
