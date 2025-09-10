@@ -9,6 +9,7 @@ from components.icon import MyIcon
 from qfluentwidgets import FluentIcon as FIF
 from view.pages.page_stock_update import PageStockUpdate
 from view.pages.page_back_test import PageBackTest
+from view.pages.page_boll_find import PageBollFind
 from view.pages.setting_page import SettingInterface
 
 
@@ -27,6 +28,7 @@ class MainWindow(FluentWindow):
 
         self.pageStockUpdate = PageStockUpdate(self)
         self.pageBackTest = PageBackTest(self)
+        self.pageBollFind = PageBollFind(self)
         self.init_navigation()
         self.init_window()
 
@@ -37,7 +39,8 @@ class MainWindow(FluentWindow):
         # 新增页面需要再此处添加
         sub_interface_list = [
             {'widget': self.pageStockUpdate, 'icon': MyIcon.EXCEL, 'text': '数据管理'},
-            {'widget': self.pageBackTest, 'icon': MyIcon.CLICK, 'text': '数据回测'}
+            {'widget': self.pageBackTest, 'icon': MyIcon.CLICK, 'text': 'boll回测'},
+            {'widget': self.pageBollFind, 'icon': MyIcon.TOOL, 'text': 'boll监测'}
         ]
         for item in sub_interface_list:
             self.addSubInterface(item['widget'], item['icon'], item['text'])

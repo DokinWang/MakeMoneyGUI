@@ -42,28 +42,57 @@ def update_sh():
     df = load_or_update("000001", True, last_trading_day())
     _sh_cache = df.set_index('日期')['收盘']
 
+def _is_trade_time() -> bool:
+    """判断当前是否处于 A 股交易时段（工作日 09:00–15:00）"""
+    now = datetime.datetime.now()
+    if now.weekday() >= 5:          # 周六/周日
+        return False
+    market_open = now.replace(hour=9, minute=0, second=0, microsecond=0)
+    market_close = now.replace(hour=15, minute=0, second=0, microsecond=0)
+    return market_open <= now <= market_close
+
+def _is_today_data(df: pd.DataFrame) -> bool:
+    """文件里的日期列是否为今天"""
+    return (df['日期'].astype(str) == datetime.datetime.now().strftime('%Y-%m-%d')).any()
+
 def get_current_stock_info(update: bool = False):
     global _curr_all_stock
 
-    if _curr_all_stock is not None:
-        return _curr_all_stock
-
-    # 检查缓存文件是否存在
-    if os.path.exists(_all_stock_file_path):
-        # 加载缓存文件
-        _curr_all_stock = pd.read_pickle(_all_stock_file_path)
-        # 检查数据是否为当天的
-        if not update and _is_today_data(_curr_all_stock):
+    # 1. 内存变量有效且无需强制更新 → 直接返回
+    if _curr_all_stock is not None and not update:
+        # 非交易时段：任何缓存都直接用
+        if not _is_trade_time():
+            print("直接使用缓存的实时股票信息")
+            return _curr_all_stock
+        # 交易时段：只要日期是今天也直接用
+        if _is_today_data(_curr_all_stock):
             return _curr_all_stock
 
-    # 如果缓存文件不存在或数据不是当天的，更新数据
+    # 2. 尝试读本地缓存
+    if os.path.exists(_all_stock_file_path):
+        try:
+            local_df = pd.read_pickle(_all_stock_file_path)
+            # 非交易时段：文件是今天的就接受
+            if not _is_trade_time() and _is_today_data(local_df):
+                _curr_all_stock = local_df
+                print("不在交易时间内,实时股票信息从文件读取")
+                return _curr_all_stock
+            # 交易时段：文件是今天的且不要求强制刷新就接受
+            if _is_trade_time() and _is_today_data(local_df) and not update:
+                _curr_all_stock = local_df
+                print("在交易时间内,但不要求更新,实时股票信息从文件读取")
+                return _curr_all_stock
+        except Exception:
+            pass  # 文件损坏就重新拉
+
+    # 3. 走到这里说明必须重新拉取
+    print("正在重新获取实时股票信息...")
     _curr_all_stock = ak.stock_zh_a_spot_em()
-    # 添加日期列
-    _curr_all_stock['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')  # 使用 datetime.now()
-    # 保存到缓存文件
+    _curr_all_stock['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')
+
     os.makedirs(os.path.dirname(_all_stock_file_path), exist_ok=True)
     _curr_all_stock.to_pickle(_all_stock_file_path)
-    print("数据已更新并保存到缓存文件")
+    print("实时数据已更新并保存到缓存文件")
     return _curr_all_stock
 
 def _is_today_data(data: pd.DataFrame) -> bool:
@@ -101,10 +130,9 @@ def load_or_update_stock_code_name_dict(update: bool = False, ak_spot = None):
         print("加载本地股票代码与名称字典库文件...")
         _stock_code_name_dict = pd.read_pickle(STOCK_CODE_NAME_DICT_FILE)
     else:
-        # 如果文件不存在，通过 ak.stock_zh_a_spot_em() 获取数据并保存
         print("本地股票代码与名称字典库文件不存在，正在获取最新数据...")
         if ak_spot is None:
-            spot = ak.stock_zh_a_spot_em()
+            spot = get_current_stock_info()
         else:
             spot = ak_spot
         spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]  # 确保代码是6位数字
@@ -175,13 +203,21 @@ def stock_name(code: str) -> str:
     if _stock_code_name_dict is None:
         load_or_update_stock_code_name_dict()
     if _stock_code_name_dict is None:
+        load_or_update_stock_code_name_dict(update=True)
+    if _stock_code_name_dict is None:
         return None
-    return _stock_code_name_dict[code]
+    if code in _stock_code_name_dict:
+        return _stock_code_name_dict[code]
+    else:
+        return None
 
 def get_all_stock_from_cache() -> Tuple[List[str], Dict[str, str]]:
     import warnings
     warnings.filterwarnings("ignore", category=FutureWarning)
-
+    '''
+    codes = ['002415', '600012']
+    names = ['海康威视', '皖通高速']
+    '''
     codes, names = [], {}
     pe_pattern = re.compile(r"\d{6}")
     dir = get_cache_dir()
@@ -198,6 +234,7 @@ def get_all_stock_from_cache() -> Tuple[List[str], Dict[str, str]]:
         codes.append(code)
         if code in _stock_code_name_dict.index:
             names[code] = _stock_code_name_dict[code]
+
     return codes, names
 
 def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
@@ -207,7 +244,6 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
     delist_codes = set(sh_delist['公司代码'].astype(str).str.zfill(6))
 
     spot = spot[~spot['代码'].isin(delist_codes)]
-
 
     # 增强退市股票过滤条件
     delisting_keywords = ['退市', '退', 'DELIST', '终止上市']
@@ -223,7 +259,7 @@ def get_all_stock() -> Tuple[List[str], Dict[str, str]]:
 
     spot = spot[spot['代码'].str.fullmatch(r'\d{6}')]
     spot = spot[~spot['名称'].str.contains('ST', na=False)]
-    spot = spot[~spot['代码'].str.startswith(('30', '83', '87', '43', '688', '689', '9'))]
+    spot = spot[~spot['代码'].str.startswith(('30', '81', '83', '87', '43', '688', '689', '9'))]
     #spot = spot[~spot['名称'].str.contains('指数', na=False)]
     # 只排除名称含“指数”且代码不是 000001 的行
     spot = spot[~(spot['名称'].str.contains('指数', na=False) & (spot['代码'] != '000001'))]

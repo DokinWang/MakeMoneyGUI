@@ -17,6 +17,7 @@ def get_sh(dt) -> int:
 #月线常开
 def boll_reverse_backtest(code: str,
                           df: pd.DataFrame,
+                          
                           policySelect: int,
                           sellPos: int,
                           upperBreak: bool,
@@ -238,3 +239,127 @@ def boll_reverse_backtest(code: str,
     df_trades = pd.DataFrame(trades)
     return df_trades
 
+def boll_find(
+    code: str,
+    df: pd.DataFrame,
+    curr_all_stock: pd.DataFrame,
+    policySelect: int,
+    upperBreak: bool,
+    marketValMin: int = 50,
+    marketValMax: int = 20000,
+    peRatioMin: int = 20,
+    peRatioMax: int = 80,
+    window: int = 20,
+) -> pd.DataFrame:
+    """扫描：最近一次“突破上轨后又跌破下轨”是否已完成"""
+    # 1. 基础过滤
+    info = curr_all_stock[curr_all_stock['代码'] == code]
+    if info.empty:
+        return pd.DataFrame()
+    marketVal = info['总市值'].values[0] / 1e8
+    peRatio = info['市盈率-动态'].values[0]
+    if not (marketValMin <= marketVal <= marketValMax and peRatioMin <= peRatio <= peRatioMax):
+        return pd.DataFrame()
+
+    # 2. 数据检查
+    if df.empty or len(df) < window + 5:
+        return pd.DataFrame()
+    df = df.sort_values('日期').reset_index(drop=True)
+
+    # 3. 合成周期
+    if policySelect == 0:
+        df['trade_no'] = df.index // 3
+    elif policySelect == 1:
+        df['trade_no'] = pd.to_datetime(df['日期']).dt.to_period('W').dt.start_time
+    else:
+        df['trade_no'] = pd.to_datetime(df['日期']).dt.to_period('M').dt.start_time
+
+    policy_df = (
+        df.groupby(df['trade_no'])
+          .agg(日期=('日期', 'last'),
+               开盘=('开盘', 'first'),
+               收盘=('收盘', 'last'),
+               最高=('最高', 'max'),
+               最低=('最低', 'min'))
+          .reset_index(drop=True)
+    )
+
+    # 3) 布林线
+    policy_df['MA20']  = policy_df['收盘'].rolling(window).mean()
+    policy_df['STD']   = policy_df['收盘'].rolling(window).std()
+    policy_df['Upper'] = policy_df['MA20'] + 2 * policy_df['STD']
+    policy_df['Lower'] = policy_df['MA20'] - 2 * policy_df['STD']
+
+    policy_df['Break_Upper'] = policy_df['最高'] >= policy_df['Upper']
+    policy_df['Break_Lower'] = policy_df['最低'] <= policy_df['Lower']
+
+    # 5. 只看今天之前已完结的周期
+    hist = policy_df.iloc[:-1]
+
+    last_break_upper_date = (
+        policy_df.loc[policy_df['Break_Upper'], '日期']
+            .iloc[-1]          # 最后一个 True
+            if policy_df['Break_Upper'].any()
+            else None
+    )
+    
+    if last_break_upper_date is None:
+        return pd.DataFrame()
+
+    curr_price = info['最新价'].values[0]
+    lower_now = policy_df['Lower'].iloc[-1]
+    if lower_now is None:
+        print('lower_now is none')
+        return pd.DataFrame()
+
+    if curr_price > lower_now:
+        return pd.DataFrame()
+
+    # 8. 信号判断
+    signal = False
+    if upperBreak:
+        up_rows = policy_df[policy_df['Break_Upper']]
+        if up_rows.empty:
+            return pd.DataFrame()                       # 从未突破过上轨
+        idx_last_up = up_rows.index[-1]                 # 行号
+
+        # 3. 截取「上次突破上轨 → 当前」这段区间
+        seg = policy_df.loc[idx_last_up:, ]             # 包含 idx_last_up 行
+
+        # 4. 检查是否出现过「跌破下轨」且「之后最高≥中轨」
+        #    只要有一次完整的 down→up 往返，就视为「到过中轨」
+        broken_lower = seg['Break_Lower']               # bool Series
+        above_ma20   = seg['最高'] >= seg['MA20']
+
+        # 向下穿越标志
+        down_cross = broken_lower & ~broken_lower.shift(1).fillna(False)
+        # 向上穿越标志
+        up_cross   = above_ma20 & ~above_ma20.shift(1).fillna(False)
+
+        # 找最近一次 down_cross 之后有没有 up_cross
+        down_idx = seg.index[down_cross]
+        if len(down_idx) == 0:
+            # 期间从未跌破下轨 → 符合要求
+            signal = True
+        else:
+            last_down = down_idx[-1]
+            # 看 last_down 之后有没有 up_cross
+            signal = up_cross.loc[last_down:].sum() == 0
+
+        buy_price = round(lower_now, 2) if signal else None
+    else:
+        signal = True
+        buy_price = round(lower_now, 2) if signal else None
+
+    if not signal:
+        return pd.DataFrame()
+
+    # 8. 组装结果
+    return pd.DataFrame([{
+        '代码': code,
+        '名称': stock_name(code),
+        '市值': round(marketVal, 2),
+        '市盈率': round(peRatio, 2),
+        '日期': datetime.date.today().strftime("%Y-%m-%d"),
+        '价格': buy_price,
+    }])

@@ -13,4 +13,6 @@ dependencies = [
     "imageio",
     "pyside6==6.7.0",
     "akshare>=1.17.29",
+    "fake_useragent",
+    "requests>=2.32.4",
 ]

@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QMenu
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
+from common.utils import show_dialog
 from components.bar import ProgressInfoBar
 from ui_page.ui_page_two import Ui_page_two
 from view.pages.page_back_test_handler import PageBackTestHandler
@@ -68,3 +69,6 @@ class PageBackTest(QWidget, Ui_page_two):
 
     def clear_stock_table(self):
         self.stockBackTestTable.setRowCount(0)
+
+    def on_common_error(self, msg):
+        show_dialog(self, msg, '提示')
